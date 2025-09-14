@@ -148,7 +148,7 @@ function openModal(key) {
               href="${escapeAttr(link.href)}"
               target="_blank" rel="noopener noreferrer"
               title="${escapeHtml(link.label)}">
-              <img src="/icons/github.svg" alt="${escapeHtml(link.label)}" />
+              <img src="${withBase('icons/github.svg')}" alt="${escapeHtml(link.label)}" />
           </a>
         `).join("")}
       ` : ""}
