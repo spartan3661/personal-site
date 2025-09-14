@@ -1,9 +1,10 @@
 // ================================
-// Neon Utilities + Interactions
+// Neon Themeing + Interactions
 // ================================
-const $ = (sel, ctx=document)=> ctx.querySelector(sel);
-const $$ = (sel, ctx=document)=> [...ctx.querySelectorAll(sel)];
+const $ = (sel, ctx = document) => ctx.querySelector(sel);
+const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 const nav = document.querySelector("header");
+
 // Accent cycling
 const accents = [
   "#00eaff",
@@ -18,30 +19,30 @@ const accents = [
 let accentIndex = 0;
 let accentTimer = null;
 
-function setAccent(c){
+function setAccent(c) {
   const root = document.documentElement;
   root.style.setProperty('--accent', c);
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) meta.setAttribute('content', c);
 }
 
-function startAccentCycle(){
+function startAccentCycle() {
   if (accentTimer) clearInterval(accentTimer);
   accentTimer = setInterval(() => {
     accentIndex = (accentIndex + 1) % accents.length;
-    setAccent(accents[accentIndex]); // CSS will fade this
+    setAccent(accents[accentIndex]);
   }, 1800);
 }
-function stopAccentCycle(){
-  if (accentTimer){ clearInterval(accentTimer); accentTimer = null; }
+function stopAccentCycle() {
+  if (accentTimer) { clearInterval(accentTimer); accentTimer = null; }
 }
 
-// boot
+// on page start
 setAccent(accents[accentIndex]);
 const cycleBox = document.querySelector('#cycle-accent');
-if (cycleBox){
+if (cycleBox) {
   cycleBox.addEventListener('change', e => e.target.checked ? startAccentCycle() : stopAccentCycle());
-  cycleBox.checked = true; // start ON
+  cycleBox.checked = true;
   startAccentCycle();
 }
 
@@ -66,52 +67,49 @@ function runBootSequence() {
     i++;
 
     if (i < bootLines.length) {
-      // continue stepping through
       setTimeout(tick, 950);
     } else {
-      // reset after a delay
       i = 0;
-      setTimeout(tick, 20000); // wait 4s before looping again
+      setTimeout(tick, 20000);
     }
   };
-
-  // kick off initial delay
   setTimeout(tick, 700);
 }
-// Wait until footer/console comes into view
+
+// wait until footer/console comes into view
 const consoleEl = document.querySelector("footer .console");
 if (consoleEl) {
   const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         runBootSequence();
-        obs.disconnect(); // only run once
+        obs.disconnect();
       }
     });
   }, {
-    threshold: 0.25 // 25% visible
+    threshold: 0.25
   });
 
   observer.observe(consoleEl);
 }
 
 // Toast
-function toast(msg){
+function toast(msg) {
   const t = $("#toast");
   if (!t) return;
   t.classList.remove("visually-hidden");
   Object.assign(t.style, {
-    position:"fixed", left:"50%", bottom:"28px", transform:"translateX(-50%)",
-    padding:"12px 16px", borderRadius:"12px", border:"1px solid var(--glass-stroke)",
-    background:"rgba(5,10,20,.8)", color:"var(--text-0)", boxShadow:"0 0 18px rgba(0,234,255,.3)"
+    position: "fixed", left: "50%", bottom: "28px", transform: "translateX(-50%)",
+    padding: "12px 16px", borderRadius: "12px", border: "1px solid var(--glass-stroke)",
+    background: "rgba(5,10,20,.8)", color: "var(--text-0)", boxShadow: "0 0 18px rgba(0,234,255,.3)"
   });
   t.textContent = msg;
   clearTimeout(t._h);
-  t._h = setTimeout(()=> { t.classList.add("visually-hidden") }, 2000);
+  t._h = setTimeout(() => { t.classList.add("visually-hidden") }, 2000);
 }
-window.toast = toast; // expose for inline links
+window.toast = toast; // if need inline links then expose
 
-// Matrix Rain — original look, just slower/faster via SPEED
+// matrix rain
 const rain = $("#rain");
 const ctx = rain.getContext("2d");
 
@@ -121,27 +119,24 @@ let fontSize = 16;
 const SPEED = 0.8;
 const chars = "アイウエオカキクケコｱｲｳｴｵｶｷｸｹｺ01░▒▓█#<>/*";
 
-function resizeCanvas(){
-  rain.width  = Math.floor(window.innerWidth  * devicePixelRatio);
+function resizeCanvas() {
+  rain.width = Math.floor(window.innerWidth * devicePixelRatio);
   rain.height = Math.floor(window.innerHeight * devicePixelRatio);
-  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
 
   columns = Math.floor(window.innerWidth / fontSize);
-  drops   = Array(columns).fill(1 + Math.random()*20);
+  drops = Array(columns).fill(1 + Math.random() * 20);
 }
 
-function drawRain(){
+function drawRain() {
   if (!rainActive) return;
-
-  // trail wipe (raise to .12 for quicker fade = calmer look)
   ctx.fillStyle = "rgba(0,0,0,0.08)";
   ctx.fillRect(0, 0, rain.width, rain.height);
 
-  // glyphs (lower alpha = softer)
   ctx.fillStyle = "rgba(0,234,255,0.2)";
   ctx.font = `${fontSize}px Consolas, monospace`;
 
-  for (let i = 0; i < drops.length; i++){
+  for (let i = 0; i < drops.length; i++) {
     const text = chars[Math.floor(Math.random() * chars.length)];
     const x = i * fontSize;
     const y = drops[i] * fontSize;
@@ -155,39 +150,35 @@ function drawRain(){
   requestAnimationFrame(drawRain);
 }
 
-window.addEventListener('resize', resizeCanvas, { passive:true });
+window.addEventListener('resize', resizeCanvas, { passive: true });
 resizeCanvas();
 drawRain();
 
 // Controls
-$("#toggle-rain")?.addEventListener('change', (e)=>{
+$("#toggle-rain")?.addEventListener('change', (e) => {
   rainActive = e.target.checked;
-  if(rainActive) drawRain();
+  if (rainActive) drawRain();
 });
-
-
-
-
 
 // Custom cursor
 const cursor = $(".cursor");
 const dot = $(".cursor-dot");
 let cx = 0, cy = 0, tx = 0, ty = 0;
 
-window.addEventListener('mousemove', (e)=>{
+window.addEventListener('mousemove', (e) => {
   cx = e.clientX; cy = e.clientY;
-  if (dot) dot.style.transform = `translate(${cx-3}px, ${cy-3}px)`;
-}, {passive:true});
+  if (dot) dot.style.transform = `translate(${cx - 3}px, ${cy - 3}px)`;
+}, { passive: true });
 
-function moveCursor(){
+function moveCursor() {
   tx += (cx - tx) * 0.18;
   ty += (cy - ty) * 0.18;
-  if (cursor) cursor.style.transform = `translate(${tx-13}px, ${ty-13}px)`;
+  if (cursor) cursor.style.transform = `translate(${tx - 13}px, ${ty - 13}px)`;
   requestAnimationFrame(moveCursor);
 }
 moveCursor();
 
-// Accent on hover targets
+// accent on hover targets
 /*
 $$('a,button,.chip,.card').forEach(el=>{
   el.addEventListener('mouseenter', ()=> document.documentElement.style.setProperty('--accent', '#ff2bd6'));
@@ -196,8 +187,8 @@ $$('a,button,.chip,.card').forEach(el=>{
 */
 
 
-// Contact form mailto enhancement (subject/body formatting)
-$("#contact-form")?.addEventListener('submit', (e)=>{
+// contact form
+$("#contact-form")?.addEventListener('submit', (e) => {
   const fd = new FormData(e.target);
   const name = encodeURIComponent(fd.get('name'));
   const email = encodeURIComponent(fd.get('email'));
@@ -207,7 +198,6 @@ $("#contact-form")?.addEventListener('submit', (e)=>{
   e.target.action = `mailto:you@example.com?subject=${subject}&body=${body}`;
 });
 
-// Respect reduced motion users
 const mediaMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const handleMotion = () => {
   const reduced = mediaMotion.matches;
@@ -216,15 +206,15 @@ const handleMotion = () => {
   const rainToggle = $("#toggle-rain");
   if (rainToggle) rainToggle.checked = !reduced;
   rainActive = !reduced;
-  if(rainActive) drawRain();
+  if (rainActive) drawRain();
 };
 mediaMotion.addEventListener('change', handleMotion);
 handleMotion();
 
 
-// Footer "bash" launcher -> opens the modal terminal
+// alt footer "bash" launcher
 (() => {
-  const input  = document.getElementById('footer-bash');
+  const input = document.getElementById('footer-bash');
   const opener = document.getElementById('open-terminal');
   if (!input || !opener) return;
 
@@ -232,7 +222,7 @@ handleMotion();
     if (e.key === 'Enter') {
       const v = input.value.trim().toLowerCase();
       if (v === 'bash') {
-        opener.click();             // reuse existing terminal opener
+        opener.click();
         setTimeout(() => input.blur(), 0);
       } else {
         toast?.('Hint: type bash');
@@ -240,7 +230,7 @@ handleMotion();
     }
   });
 
-  // global hotkey: ~ opens terminal (unless typing in another field)
+  // global hotkey ~ opens terminal
   window.addEventListener('keydown', (e) => {
     const active = document.activeElement;
     const typing = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable);
@@ -253,10 +243,10 @@ const card = document.querySelector('.holo-frame');
 if (card) {
   card.addEventListener('mousemove', (e) => {
     const r = card.getBoundingClientRect();
-    const cx = r.left + r.width/2, cy = r.top + r.height/2;
-    const dx = (e.clientX - cx) / (r.width/2);
-    const dy = (e.clientY - cy) / (r.height/2);
-    card.style.transform = `rotateX(${(-dy*8).toFixed(2)}deg) rotateY(${(dx*8).toFixed(2)}deg)`;
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    const dx = (e.clientX - cx) / (r.width / 2);
+    const dy = (e.clientY - cy) / (r.height / 2);
+    card.style.transform = `rotateX(${(-dy * 8).toFixed(2)}deg) rotateY(${(dx * 8).toFixed(2)}deg)`;
   });
   card.addEventListener('mouseleave', () => {
     card.style.transform = 'rotateX(0deg) rotateY(0deg)';

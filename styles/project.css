@@ -1,28 +1,34 @@
-:root{
+:root {
   --pm-bg: rgba(8, 12, 20, 0.72);
-  --pm-stroke: var(--glass-stroke, rgba(255,255,255,0.12));
-  --pm-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 24px rgba(0,234,255,.12);
+  --pm-stroke: var(--glass-stroke, rgba(255, 255, 255, 0.12));
+  --pm-shadow: 0 20px 60px rgba(0, 0, 0, .6), 0 0 24px rgba(0, 234, 255, .12);
   --pm-radius: 16px;
   --pm-accent: var(--accent, #00eaff);
 }
 
 /* hidden by default */
-.project-modal[aria-hidden="true"] { display: none; }
+.project-modal[aria-hidden="true"] {
+  display: none;
+}
 
-.project-modal{
-  position: fixed; inset: 0; z-index: 9998;
-  display: grid; place-items: center;
+.project-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: grid;
+  place-items: center;
 }
 
 /* frosted backdrop w/ blur */
-.project-backdrop{
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,.45);
+.project-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, .45);
   backdrop-filter: blur(8px) saturate(140%);
   -webkit-backdrop-filter: blur(8px) saturate(140%);
 }
 
-.project-window{
+.project-window {
   position: relative;
   width: min(960px, 92vw);
   max-height: 88vh;
@@ -30,9 +36,9 @@
   border-radius: var(--pm-radius);
   border: 1px solid var(--pm-stroke);
   background:
-    radial-gradient(120% 160% at 80% -20%, rgba(0,234,255,.08), transparent 50%),
-    radial-gradient(120% 140% at 0% 110%, rgba(255,43,214,.08), transparent 55%),
-    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+    radial-gradient(120% 160% at 80% -20%, rgba(0, 234, 255, .08), transparent 50%),
+    radial-gradient(120% 140% at 0% 110%, rgba(255, 43, 214, .08), transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02)),
     var(--pm-bg);
   box-shadow: var(--pm-shadow);
   transform: translateY(8px) scale(.98);
@@ -44,93 +50,129 @@
 }
 
 /* mount animation */
-.project-modal:not([aria-hidden="true"]) .project-window{
+.project-modal:not([aria-hidden="true"]) .project-window {
   transform: translateY(0) scale(1);
   opacity: 1;
 }
 
 /* header */
-.pm-chrome{
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; padding: 12px 14px;
+.pm-chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--pm-stroke);
-  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02));
 }
-.pm-title{
+
+.pm-title {
   margin: 0;
   font-size: 18px;
   letter-spacing: .08em;
   color: var(--text-0);
   text-shadow: 0 0 8px var(--pm-accent);
 }
-.pm-actions{ display: flex; gap: 8px; }
+
+.pm-actions {
+  display: flex;
+  gap: 8px;
+}
 
 /* close button */
-.pm-close{
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px; border-radius: 50%;
+.pm-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   border: 1px solid var(--pm-stroke);
-  background: rgba(255,255,255,.06);
+  background: rgba(255, 255, 255, .06);
   color: var(--text-0);
-  box-shadow: inset 0 0 8px rgba(255,255,255,.06);
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, .06);
 }
-.pm-close:hover{
-  border-color: rgba(255,255,255,.24);
-  box-shadow: 0 0 10px rgba(0,234,255,.35), inset 0 0 12px rgba(255,255,255,.08);
+
+.pm-close:hover {
+  border-color: rgba(255, 255, 255, .24);
+  box-shadow: 0 0 10px rgba(0, 234, 255, .35), inset 0 0 12px rgba(255, 255, 255, .08);
 }
+
 .pm-blurb {
-  white-space: pre-line; /* convert \n to real line breaks */
+  white-space: pre-line;
+  /* convert \n to real line breaks */
 }
 
 /* content */
-.pm-body{
+.pm-body {
   padding: 16px;
   overflow: auto;
   display: grid;
   gap: 16px;
 }
-.pm-meta{
-  display: flex; flex-wrap: wrap; gap: 10px; color: var(--muted);
+
+.pm-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--muted);
   font-size: 14px;
 }
-.pm-links{ display: flex; flex-wrap: wrap; gap: 10px; }
-.pm-links a{
-  display: inline-flex; align-items: center; gap: 8px;
+
+.pm-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pm-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   border: 1px solid var(--pm-stroke);
   border-radius: 999px;
   padding: 8px 12px;
   color: var(--link);
   text-decoration: none;
-  background: rgba(255,255,255,.04);
+  background: rgba(255, 255, 255, .04);
 }
-.pm-links a:hover{
-  border-color: rgba(0,234,255,.45);
-  box-shadow: 0 0 12px rgba(0,234,255,.25);
+
+.pm-links a:hover {
+  border-color: rgba(0, 234, 255, .45);
+  box-shadow: 0 0 12px rgba(0, 234, 255, .25);
 }
 
 /* list */
-.pm-list{ margin: 0; padding-left: 18px; color: var(--text-0); }
-.pm-list li{ margin: 6px 0; }
-
-/* ensure pointer shows inside modal (site hides cursor globally) */
-.project-modal, .project-modal * { cursor: auto !important; }
-
-/* reduced motion */
-@media (prefers-reduced-motion: reduce){
-  .project-window{ transition: none; }
+.pm-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-0);
 }
 
+.pm-list li {
+  margin: 6px 0;
+}
 
-/* ===== Cyberpunk window flair: scanlines + edge glow ===== */
+@media (prefers-reduced-motion: reduce) {
+  .project-window {
+    transition: none;
+  }
+}
+
+/* ===== scanlines + edge glow ===== */
 .project-window {
   position: relative;
-  isolation: isolate; /* keep glows tidy */
+  isolation: isolate;
 }
-/* replace your existing ::before + @keyframes */
-.project-window::before{
-  content:"";
-  position:absolute; inset:auto 0 0 0; /* stick to top: 0; if you want it at the top */
-  top: 0; height: 2px; z-index: 2; pointer-events:none;
+
+.project-window::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  top: 0;
+  height: 2px;
+  z-index: 2;
+  pointer-events: none;
 
   /* full width bar with a moving highlight */
   background: linear-gradient(90deg, transparent, var(--pm-accent), transparent);
@@ -141,81 +183,74 @@
   opacity: .7;
 
   animation: edge-scan 2.8s linear infinite;
-}
-
-@keyframes edge-scan{
-  from { background-position: -100% 0; }
-  to   { background-position: 100% 0;  }
 }
 
 /* soft scanlines overlay inside window */
 .project-window::after {
   content: "";
-  position: absolute; inset: 0; pointer-events: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   background:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.04) 0px,
-      rgba(255,255,255,0.04) 1px,
+    repeating-linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.04) 0px,
+      rgba(255, 255, 255, 0.04) 1px,
       transparent 2px,
-      transparent 4px
-    );
+      transparent 4px);
   mix-blend-mode: overlay;
   opacity: .5;
-  z-index: 1; /* above bg, below content */
+  z-index: 1;
+  /* above bg, below content */
 }
 
-.project-window::before{
-  content:"";
-  position:absolute; inset:auto 0 0 0; /* stick to top: 0; if you want it at the top */
-  top: 0; height: 2px; z-index: 2; pointer-events:none;
+@keyframes edge-scan {
+  from {
+    background-position: -100% 0;
+  }
 
-  /* full width bar with a moving highlight */
-  background: linear-gradient(90deg, transparent, var(--pm-accent), transparent);
-  background-size: 200% 100%;
-  background-position: -100% 0;
-
-  filter: drop-shadow(0 0 10px var(--pm-accent));
-  opacity: .7;
-
-  animation: edge-scan 2.8s linear infinite;
-}
-
-@keyframes edge-scan{
-  from { background-position: -100% 0; }
-  to   { background-position: 100% 0;  }
+  to {
+    background-position: 100% 0;
+  }
 }
 
 
-/* ===== Footer living at the bottom of the modal ===== */
+/* ===== Footer living at bottom of modal ===== */
 .pm-footer {
   position: relative;
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
   border-top: 1px solid var(--pm-stroke);
   background:
-    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+    linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02)),
     rgba(0, 8, 12, .25);
-  z-index: 3; /* above scanlines */
+  z-index: 3;
+  /* above scanlines */
 }
 
 /* faint pulsing accent line under the footer */
 .pm-footer::after {
-  content:"";
-  position:absolute; left:10px; right:10px; bottom:6px; height:2px;
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 6px;
+  height: 2px;
   background: linear-gradient(90deg, var(--neon-magenta), var(--neon-cyan));
   transform: scaleX(.25);
   transform-origin: left;
   transition: transform .35s ease;
-  filter: drop-shadow(0 0 10px var(--neon-magenta))
-          drop-shadow(0 0 10px var(--neon-cyan));
-  opacity:.6;
+  filter: drop-shadow(0 0 10px var(--neon-magenta)) drop-shadow(0 0 10px var(--neon-cyan));
+  opacity: .6;
 }
+
 .project-modal:not([aria-hidden="true"]) .pm-footer::after {
   transform: scaleX(1);
 }
 
-/* left side hint text in footer (optional) */
+/* left side hint text in foote */
 .pm-hint {
   color: var(--muted);
   font-size: 13px;
@@ -225,28 +260,31 @@
 /* ===== GitHub neon pill button ===== */
 .pm-link {
   --btn-glow: var(--pm-accent);
-  display: inline-flex; align-items: center; gap: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   padding: 10px 14px;
   border-radius: 999px;
   border: 1px solid var(--pm-stroke);
   color: var(--text-0);
   text-decoration: none;
   background:
-    radial-gradient(60% 120% at 0% 50%, rgba(255,43,214,.10), transparent 60%),
-    radial-gradient(60% 120% at 100% 50%, rgba(0,234,255,.10), transparent 60%),
-    rgba(255,255,255,.04);
+    radial-gradient(60% 120% at 0% 50%, rgba(255, 43, 214, .10), transparent 60%),
+    radial-gradient(60% 120% at 100% 50%, rgba(0, 234, 255, .10), transparent 60%),
+    rgba(255, 255, 255, .04);
   box-shadow:
     0 0 10px color-mix(in srgb, var(--btn-glow) 35%, transparent),
-    inset 0 0 8px rgba(255,255,255,.05);
+    inset 0 0 8px rgba(255, 255, 255, .05);
   transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
+
 .pm-link:hover {
   transform: translateY(-1px);
   border-color: color-mix(in srgb, var(--btn-glow) 50%, var(--pm-stroke));
   box-shadow:
     0 0 14px color-mix(in srgb, var(--btn-glow) 45%, transparent),
     0 0 24px color-mix(in srgb, var(--btn-glow) 35%, transparent),
-    inset 0 0 12px rgba(255,255,255,.08);
+    inset 0 0 12px rgba(255, 255, 255, .08);
 }
 
 .pm-link:focus-visible {
@@ -256,20 +294,30 @@
 
 /* icon + label */
 .pm-link img {
-  width: 18px; height: 18px; display: block; pointer-events: none;
+  width: 18px;
+  height: 18px;
+  display: block;
+  pointer-events: none;
   filter: drop-shadow(0 0 6px var(--btn-glow));
 }
+
 .pm-link .pm-link-label {
-  letter-spacing: .04em; font-weight: 600; color: var(--link);
+  letter-spacing: .04em;
+  font-weight: 600;
+  color: var(--link);
 }
 
 /* make sure modal layout includes footer row */
 .project-window {
-  grid-template-rows: auto 1fr auto; /* header / body / footer */
+  grid-template-rows: auto 1fr auto;
+  /* header / body / footer */
 }
 
-/* ensure pointer shows inside modal (your site hides cursor globally) */
-.project-modal, .project-modal * { cursor: auto !important; }
+/* ensure pointer shows inside modal (site hides cursor globally) */
+.project-modal,
+.project-modal * {
+  cursor: auto !important;
+}
 
 
 .pm-icon-link {
@@ -279,12 +327,13 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #ffffff; /* subtle cyan backdrop */
+  background: #ffffff;
+  /* subtle cyan backdrop */
   border: 1px solid var(--glass-stroke);
   box-shadow:
-    0 0 8px rgba(0,234,255,.4),
-    0 0 18px rgba(0,234,255,.25),
-    inset 0 0 12px rgba(0,234,255,.2);
+    0 0 8px rgba(0, 234, 255, .4),
+    0 0 18px rgba(0, 234, 255, .25),
+    inset 0 0 12px rgba(0, 234, 255, .2);
   transition: transform .2s ease, box-shadow .2s ease;
 }
 
@@ -298,11 +347,74 @@
 .pm-icon-link:hover {
   transform: translateY(-2px) scale(1.05);
   box-shadow:
-    0 0 10px rgba(0,234,255,.6),
-    0 0 20px rgba(0,234,255,.4),
-    inset 0 0 16px rgba(0,234,255,.3);
+    0 0 10px rgba(0, 234, 255, .6),
+    0 0 20px rgba(0, 234, 255, .4),
+    inset 0 0 16px rgba(0, 234, 255, .3);
 }
 
 .pm-icon-link:active {
   transform: scale(.95);
+}
+
+
+/* modal image area */
+.pm-media {
+  margin-bottom: 1rem;
+}
+
+.pm-carousel {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: .5rem;
+}
+
+.pm-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #0b0b0b;
+}
+
+.pm-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  max-height: 60vh;
+}
+
+.pm-nav {
+  border: none;
+  background: transparent;
+  font-size: 2rem;
+  line-height: 1;
+  padding: .25rem .5rem;
+  cursor: pointer;
+}
+
+.pm-nav:focus {
+  outline: 2px solid var(--focus, #6aa3ff);
+  outline-offset: 2px;
+}
+
+.pm-dots {
+  display: flex;
+  gap: .5rem;
+  justify-content: center;
+  margin-top: .5rem;
+}
+
+.pm-dot {
+  width: .6rem;
+  height: .6rem;
+  border-radius: 50%;
+  border: none;
+  background: #777;
+  cursor: pointer;
+}
+
+.pm-dot.is-active {
+  background: #fff;
 }
