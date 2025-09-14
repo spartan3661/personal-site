@@ -18,10 +18,10 @@ const PROJECTS = {
       "Hotkeys, overlay indicators, and translation display.",
     ],
     images: [
-      "/assets/menu.png",
-      "/assets/menu_ocr.png",
-      "/assets/tevi1.png",
-      "/assets/tevi1_ocr.png",
+      "assets/menu.png",
+      "assets/menu_ocr.png",
+      "assets/tevi1.png",
+      "assets/tevi1_ocr.png",
     ]
   },
   wgcapture: {
@@ -52,6 +52,21 @@ const PROJECTS = {
     ],
   },
 };
+
+function ghBase() {
+  // Works for both user/organization pages (/) and project pages (/repo/)
+  const parts = location.pathname.split('/').filter(Boolean);
+  return parts.length ? `/${parts[0]}/` : '/';
+}
+function withBase(path) {
+  // If already absolute or full URL, leave it
+  if (/^https?:\/\//i.test(path)) return path;
+  if (path.startsWith('/')) return path; // you probably won't use this on project pages
+  // If it already starts with 'assets/' or 'icons/', just prefix the base
+  return ghBase() + path.replace(/^(\.\/)+/, '');
+}
+
+
 
 const modal = document.getElementById("project-modal");
 const win = modal?.querySelector(".project-window");
@@ -90,7 +105,7 @@ function openModal(key) {
             <div class="pm-frame">
               <img
                 class="pm-img"
-                src="${escapeAttr(data.images[0])}"
+                src="${data.images[0] || ''}"
                 alt="${escapeHtml(data.title)} screenshot 1"
                 loading="lazy"
                 data-carousel-img
