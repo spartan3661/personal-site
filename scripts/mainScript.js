@@ -3,7 +3,7 @@
 // ================================
 const $ = (sel, ctx=document)=> ctx.querySelector(sel);
 const $$ = (sel, ctx=document)=> [...ctx.querySelectorAll(sel)];
-
+const nav = document.querySelector("header");
 // Accent cycling
 const accents = ["#00eaff","#ff2bd6","#67ff85","#ffe359"];
 let accentIndex = 0;
@@ -15,25 +15,55 @@ function setAccent(color){
 }
 setAccent(accents[0]);
 
+
 // Console boot messages
 const bootLines = [
-  "link: uplink established",
-  "gpu: neon shaders warmed",
-  "ui: holograms calibrated",
-  "sec: vault sealed",
-  "usr: awaiting input"
+  "querying ChatGPT... [OK]",
+  "./neon_init.sh --verbose",
+  ">>> initializing subsystems...",
+  ">>> loaded 12/12 modules [OK]",
+  "WARNING! You are logged in as root.",
+  "press \"~\" for more info",
 ];
-(function boot(){
-  const log = $("#console-log");
+function runBootSequence() {
+  const log = document.querySelector("#console-log");
   if (!log) return;
+
   let i = 0;
+
   const tick = () => {
-    log.textContent = bootLines[i % bootLines.length];
+    log.textContent = bootLines[i];
     i++;
-    if(i < bootLines.length) setTimeout(tick, 950);
+
+    if (i < bootLines.length) {
+      // continue stepping through
+      setTimeout(tick, 950);
+    } else {
+      // reset after a delay
+      i = 0;
+      setTimeout(tick, 20000); // wait 4s before looping again
+    }
   };
+
+  // kick off initial delay
   setTimeout(tick, 700);
-})();
+}
+// Wait until footer/console comes into view
+const consoleEl = document.querySelector("footer .console");
+if (consoleEl) {
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        runBootSequence();
+        obs.disconnect(); // only run once
+      }
+    });
+  }, {
+    threshold: 0.25 // 25% visible
+  });
+
+  observer.observe(consoleEl);
+}
 
 // Toast
 function toast(msg){
@@ -134,10 +164,13 @@ function moveCursor(){
 moveCursor();
 
 // Accent on hover targets
+/*
 $$('a,button,.chip,.card').forEach(el=>{
   el.addEventListener('mouseenter', ()=> document.documentElement.style.setProperty('--accent', '#ff2bd6'));
   el.addEventListener('mouseleave', ()=> document.documentElement.style.setProperty('--accent', accents[accentIndex]));
 });
+*/
+
 
 // Contact form mailto enhancement (subject/body formatting)
 $("#contact-form")?.addEventListener('submit', (e)=>{

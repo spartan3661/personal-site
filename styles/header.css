@@ -1,0 +1,106 @@
+
+header {
+  transition:
+    transform .35s ease,
+    width .35s ease,
+    border-radius .35s ease,
+    background .35s ease,
+    box-shadow .35s ease,
+    opacity .35s ease;
+}
+
+header.island {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(960px, calc(100% - 32px));
+  z-index: 50;
+
+  background: linear-gradient(180deg, rgba(5,10,20,.75), rgba(5,10,20,.45));
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid var(--glass-stroke);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 60px rgba(0,0,0,.45), 0 0 24px rgba(0,234,255,.15);
+}
+
+/* UND0CKING: keep it fixed while animating back to docked geometry */
+header.undocking {
+  position: fixed;      /* still out of flow while animating */
+  top: 0;               /* animate to the docked position */
+  left: 0;
+  transform: none;
+  width: 100%;
+  z-index: 50;
+
+  /* morph visuals toward docked look */
+  border-radius: 0;
+  box-shadow: none;
+  background: linear-gradient(180deg, rgba(5,10,20,.75), rgba(5,10,20,.35));
+  border: 1px solid var(--glass-stroke);
+}
+
+/* Spacer handles layout shift smoothly (no snap) */
+#header-spacer {
+  height: 0;
+  transition: height .35s ease;
+}
+/* Reserve space while floating OR undocking */
+header.island + #header-spacer,
+header.undocking + #header-spacer {
+  height: var(--header-h, 64px);
+}
+
+/* Optional: motion respect */
+@media (prefers-reduced-motion: reduce) {
+  header, #header-spacer { transition: none !important; }
+}
+
+/* Floating island base: hidden & non-interactive by default */
+.nav-island {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px) scale(.98);
+  width: min(960px, calc(100% - 32px));
+  z-index: 60;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .28s ease, transform .28s ease;
+
+  background: linear-gradient(180deg, rgba(5,10,20,.75), rgba(5,10,20,.45));
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid var(--glass-stroke);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 60px rgba(0,0,0,.45), 0 0 24px rgba(0,234,255,.15);
+}
+
+/* Content inside the island mirrors your header .nav layout */
+.nav-island .nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+}
+
+/* Show state */
+.nav-island.active {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+@media (max-width: 640px) {
+  .nav-island {
+    top: 10px;
+    width: calc(100% - 16px);
+    border-radius: var(--radius-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-island { transition: none; }
+}

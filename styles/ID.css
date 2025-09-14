@@ -82,7 +82,7 @@
   overflow: hidden;
 }
 .holo-chip::after {
-  content: "NC";
+  content: "CA";
   position: absolute; inset: 0;
   display: grid; place-items: center;
   font-family: 'Share Tech Mono', monospace;
@@ -119,7 +119,7 @@
 }
 .holo-first {
   font-family: 'Orbitron', sans-serif;
-  font-size: 1.2rem; letter-spacing: 0.18em; color: #f0f; text-shadow: 0 0 8px #f0f;
+  font-size: 1.6rem; letter-spacing: 0.18em; color: #f0f; text-shadow: 0 0 8px #f0f;
 }
 .holo-last {
   font-family: 'Orbitron', sans-serif;

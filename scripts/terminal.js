@@ -8,6 +8,8 @@
   const userEl   = document.getElementById('term-user');
   const hostEl   = document.getElementById('term-host');
   const windowEl = modal?.querySelector('.term-window');
+  const rainToggle  = document.getElementById('toggle-rain');
+  const pulseToggle = document.getElementById('cycle-accent');
 
   if (!modal || !screen || !form || !input || !openBtn || !windowEl) return;
 
@@ -152,8 +154,18 @@
     'ls','cat','echo',
     'whoami','about','skills','projects','contact','links',
     'open','date','pwd','cd',
-    'flicker','warp'
+    'flicker','warp',
+    'rain','pulse'
   ];
+
+  // toggles rain or pulse
+  function setToggle(el, on){
+    if (!el) return false;
+    el.checked = !!on;
+    el.dispatchEvent(new Event('change', { bubbles: true })); // triggers your existing listeners
+    return true;
+  }
+
   function doAutocomplete(){
     const raw = input.value.trim();
     const [cmd, ...rest] = raw.split(/\s+/);
@@ -190,7 +202,10 @@
         '  pwd, cd (cd is cosmetic)',
         '  date',
         '  flicker <on|off>   # toggle text flicker',
-        '  warp <on|off>      # toggle CRT fisheye'
+        '  warp <on|off>      # toggle CRT fisheye',
+        '  rain <on|off>      # toggle site wide rain',
+        '  pulse <on|off>     # toggle site wide pulse'
+
       ].join('\n'));
     },
     clear(){ screen.innerHTML = ''; },
@@ -203,7 +218,7 @@
       if (!arg) return echo('cat: missing file operand', 'err');
       switch(arg){
         case 'README.md':
-          echo(`# Cyber•You Terminal\nUse 'help' to see commands.\nTry: about, projects, contact`); break;
+          echo(`# Info•Daemon Terminal\nUse 'help' to see commands.\nTry: about, projects, contact`); break;
         case 'about.txt':
           echo(state.data.about); break;
         case 'skills.txt':
@@ -247,7 +262,9 @@
       else { state.cwd = arg.replace(/\/+/g,''); }
     },
     flicker(arg){
-      if (!arg) return echo(`flicker is ${state.effects.flicker ? 'on' : 'off'}`);
+      if (!arg) {
+        return echo(`flicker is ${state.effects.flicker ? 'on' : 'off'} (try "flicker on" or "flicker off")`);
+      }
       const val = /^(on|off)$/i.test(arg) ? arg.toLowerCase() : null;
       if (!val) return echo(`flicker: expected 'on' or 'off'`, 'err');
       state.effects.flicker = (val === 'on');
@@ -255,13 +272,39 @@
       echo(`flicker ${val}`);
     },
     warp(arg){
-      if (!arg) return echo(`warp is ${state.effects.warp ? 'on' : 'off'}`);
+      if (!arg) {
+        return echo(`warp is ${state.effects.warp ? 'on' : 'off'} (try "warp on" or "warp off")`)
+      };
       const val = /^(on|off)$/i.test(arg) ? arg.toLowerCase() : null;
       if (!val) return echo(`warp: expected 'on' or 'off'`, 'err');
       state.effects.warp = (val === 'on');
       applyEffects();
       echo(`warp ${val}`);
-    }
+
+      
+    },
+    rain(arg){
+      if (!rainToggle) return echo('rain: toggle not found', 'err');
+      if (!arg) {
+        return echo(`rain is ${rainToggle.checked ? 'on' : 'off'} (try "rain on" or "rain off")`);
+      }
+      const val = /^(on|off)$/i.test(arg) ? arg.toLowerCase() : null;
+      if (!val) return echo(`rain: expected 'on' or 'off'`, 'err');
+      setToggle(rainToggle, val === 'on');
+      echo(`rain ${val}`);
+    },
+
+    pulse(arg){
+      if (!pulseToggle) return echo('pulse: toggle not found', 'err');
+      if (!arg) {
+        return echo(`pulse is ${pulseToggle.checked ? 'on' : 'off'} (try "pulse on" or "pulse off")`);
+      }
+      const val = /^(on|off)$/i.test(arg) ? arg.toLowerCase() : null;
+      if (!val) return echo(`pulse: expected 'on' or 'off'`, 'err');
+      setToggle(pulseToggle, val === 'on');
+      echo(`pulse ${val}`);
+    },
+
   };
 
   /* ---------- form submit ---------- */

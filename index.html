@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0ef" />
   <meta name="description" content="Cyberpunk themed personal website" />
-  <title>CYBER•YOU // Neon Persona</title>
+  <title>INFO-DAEMON</title>
   <link rel="preload" href="./styles/style.css" as="style" />
-  <link rel="stylesheet" href="./styles/style.css" />
+  <link rel="stylesheet" href="./styles/mainStyle.css" />
   <link rel="stylesheet" href="./styles/terminal.css" />
   <link rel="stylesheet" href="./styles/effects.css" />
   <link rel="stylesheet" href="./styles/ID.css" />
+  <link rel="stylesheet" href="./styles/header.css" />
 </head>
 <body>
   <!-- background layers -->
@@ -42,24 +43,16 @@
       </a>
 
       <nav aria-label="Primary">
-        <a href="#about">About</a>
+        <a href="#">About</a>
         <a href="#projects">Projects</a>
         <a href="#skills">Skills</a>
         <a href="#contact">Contact</a>
         <a href="#" id="open-terminal" aria-haspopup="dialog" aria-controls="terminal-modal" aria-label="Open retro terminal">Terminal</a>
       </nav>
-
-      <div class="controls">
-        <label class="chip" title="Toggle matrix rain">
-          <input type="checkbox" id="toggle-rain" checked /> Rain
-        </label>
-        <label class="chip" title="Cycle accent color">
-          <input type="checkbox" id="cycle-accent" /> Pulse
-        </label>
-      </div>
     </div>
   </header>
 
+  <div class="nav-island" aria-hidden="true"></div>
   <!-- hero -->
   <main id="top">
     <section class="container hero" aria-label="Intro">
@@ -71,14 +64,13 @@
         </p>
         <!-- remember to change this!-->>
         <p class="top-desc">
-          Hey, I’m Ben. I like building digital systems that feel alive — tools that are a little experimental and a lot of fun. 
-          This site is my playground for ideas, half-finished experiments, and the occasional midnight breakthrough.
+          Identity: Subject 2077 (Ben Carnes) — creative computing and systems integration.
         </p>
-        <p class="top-desc">I enjoy exploring the spaces where math meets machines, where interfaces meet imagination. 
-          Some projects are polished, others are chaotic prototypes — but all of them are part of chasing what’s possible.</p>
+        <p class="top-desc">Report: As of now, Subject 2077's work spans from across the stack from user applications, to full stack development and a touch lower level systems.</p>
         <div class="cta">
           <a class="btn" href="#projects" aria-label="View Projects">View Projects</a>
           <a class="btn" href="#contact" aria-label="Contact Me">Contact</a>
+          <a class="btn" href="./assets/ZONGYU_CARNES_V3.pdf" download aria-label="Download Resume">Resume</a>
         </div>
         <div class="stats" role="list" aria-label="Quick stats">
           <div class="stat" role="listitem"><b>2</b> Side Projects in Progress</div>
@@ -100,7 +92,8 @@
             <div class="holo-chip" aria-hidden="true"></div>
 
             <div class="holo-top">
-              <span class="holo-label">IDENTITY</span>
+              <span class="holo-label">IDENTITY: Subject 2077</span>
+
               <span class="holo-badge">PENDING</span>
             </div>
 
@@ -141,12 +134,10 @@
         </div>
       </div>
 
-
-
     <!-- about -->
     <section id="about">
       <div class="container">
-        <h2 class="section-title">/ About Me</h2>
+        <h2 class="section-title">/ Work History</h2>
         <div class="timeline">
           <div class="timeline-item">
             <div class="year">2025</div>
@@ -171,31 +162,36 @@
       <div class="container">
         <h2 class="section-title">/ Projects</h2>
         <div class="grid-cards" role="list">
+
           <article class="card" role="listitem">
-            <span class="tag">WebGL</span>
-            <h3>GhostGrid</h3>
-            <p class="meta">A volumetric neon grid renderer with camera parallax and shader-driven glow.</p>
+            <span class="tag">Python/C++</span>
+            <h3>Gamegrab</h3>
+            <p class="meta">Desktop OCR + translation for PC games built with PySide6 GUI, EasyOCR, and a C++ capture backend.</p>
             <div class="actions">
-              <a class="link" href="#" onclick="toast('Demo secured: request access');return false;">🔐 Live Demo</a>
-              <a class="link" href="#" onclick="toast('Repo mirrored to your drive');return false;">🗂️ Repo</a>
+              <a href="https://github.com/spartan3661/Gamegrab" target="#" class="icon" title="Go to GitHub">
+                <img src="./icons/github.svg" alt="Go to GitHub" width="32" height="32" style="vertical-align:middle;"/>
+              </a>
             </div>
           </article>
           <article class="card" role="listitem">
-            <span class="tag">UI/UX</span>
-            <h3>HoloUI</h3>
-            <p class="meta">A holographic component kit (buttons, sliders, sheets) with layered bloom.</p>
+            <span class="tag">Python/C++</span>
+            <h3>WGCapture</h3>
+            <p class="meta">PyPI package enabling highly consistent per-window screen capture via GPU-backed frame pooling.</p>
             <div class="actions">
-              <a class="link" href="#" onclick="toast('Design file shared');return false;">🎨 Figma</a>
-              <a class="link" href="#" onclick="toast('Install: npm i holoui');return false;">📦 Install</a>
+              <a href="https://github.com/spartan3661/WGCapture" target="#" class="icon" title="Go to GitHub">
+                <img src="./icons/github.svg" alt="Go to GitHub" width="32" height="32" style="vertical-align:middle;"/>
+              </a>
             </div>
           </article>
+
           <article class="card" role="listitem">
-            <span class="tag">Perf</span>
-            <h3>PhotonOps</h3>
-            <p class="meta">Automated RUM budget enforcer + anomaly detection for UX regressions.</p>
+            <span class="tag">C++</span>
+            <h3>Chamber Crawler 3000+</h3>
+            <p class="meta">A console driven rogue like dungeon crawler.</p>
             <div class="actions">
-              <a class="link" href="#" onclick="toast('Dashboard synced');return false;">📊 Dashboard</a>
-              <a class="link" href="#" onclick="toast('Docs opened');return false;">📖 Docs</a>
+              <a href="https://github.com/spartan3661/cck3" target="#" class="icon" title="Go to GitHub">
+                <img src="./icons/github.svg" alt="Go to GitHub" width="32" height="32" style="vertical-align:middle;"/>
+              </a>
             </div>
           </article>
         </div>
@@ -208,49 +204,41 @@
         <h2 class="section-title">/ Skills</h2>
         <div class="skills">
           <article class="card">
-            <h3>Frontend</h3>
-            <p class="meta">TypeScript, React, Svelte, Web Components, Vite, PWAs</p>
-            <div class="bar" style="--pct: 92%"><span aria-hidden="true"></span></div>
-          </article>
-          <article class="card">
-            <h3>Motion + 3D</h3>
-            <p class="meta">GSAP, WebGL, Three.js, CSS Houdini</p>
-            <div class="bar" style="--pct: 85%"><span aria-hidden="true"></span></div>
-          </article>
-          <article class="card">
-            <h3>Performance</h3>
-            <p class="meta">Lighthouse, RUM, CDNs, Code-splitting, Web Vitals</p>
+            <h3>Languages</h3>
+            <p class="meta">Python, C++, C, JavaScript, HTML, CSS</p>
             <div class="bar" style="--pct: 95%"><span aria-hidden="true"></span></div>
           </article>
           <article class="card">
-            <h3>Tooling</h3>
-            <p class="meta">Node, Bun, Playwright, Vitest, Storybook</p>
+            <h3>Frameworks & Libraries</h3>
+            <p class="meta">PyTorch, PySide6, React, WordPress (JS/PHP)</p>
             <div class="bar" style="--pct: 88%"><span aria-hidden="true"></span></div>
+          </article>
+          <article class="card">
+            <h3>Tools & Systems</h3>
+            <p class="meta">Git, Bash, Linux, Docker, Jupyter, DLL Dev, Direct3D</p>
+            <div class="bar" style="--pct: 40%"><span aria-hidden="true"></span></div>
+          </article>
+          <article class="card">
+            <h3>Cloud & Platforms</h3>
+            <p class="meta">Microsoft Azure, Qdrant</p>
+            <div class="bar" style="--pct: 80%"><span aria-hidden="true"></span></div>
           </article>
         </div>
       </div>
     </section>
 
+
     <!-- contact -->
     <section id="contact">
       <div class="container">
         <h2 class="section-title">/ Contact</h2>
-        <form id="contact-form" action="mailto:you@example.com" method="post" enctype="text/plain">
-          <label>
-            <span class="visually-hidden">Your name</span>
-            <input name="name" required placeholder="Display Name" autocomplete="name" />
-          </label>
-          <label>
-            <span class="visually-hidden">Your email</span>
-            <input name="email" type="email" required placeholder="neon@matrix.net" autocomplete="email" />
-          </label>
-          <label>
-            <span class="visually-hidden">Message</span>
-            <textarea name="message" required placeholder="Transmit a message…"></textarea>
-          </label>
+        <form id="contact-form" action="https://formspree.io/f/mldwvkao" method="POST">
+          <label><input name="name" required placeholder="Your Name" autocomplete="name" /></label>
+          <label><input name="email" type="email" required placeholder="Your email..." autocomplete="email" /></label>
+          <label><textarea name="message" required placeholder="Transmit a message…"></textarea></label>
+          <button class="btn" type="submit">Send Transmission</button>
           <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
-            <button class="btn" type="submit">Send Transmission</button>
-            <span class="small">Psst! I swear I am not evil :) </span>
+            <span class="small">Psst! I am not evil :) </span>
           </div>
         </form>
       </div>
@@ -262,7 +250,7 @@
   <div class="console" aria-live="polite" aria-atomic="true">
     <div class="console-line">
       <span>
-        <b>info-daemon@unknown</b>:~$ boot sequence — 
+        <b>info-daemon@unknown</b>:~$
         <span id="console-log">ready</span><span class="blink">▮</span>
       </span>
 
@@ -277,6 +265,20 @@
 
       <small class="hint">press <kbd>~</kbd> to open anywhere</small>
     </div>
+  </div>
+  
+  <div class="site-controls">
+    <label class="chip" title="Toggle matrix rain">
+      <input type="checkbox" id="toggle-rain" checked />
+      <span class="switch" aria-hidden="true"></span>
+      <span class="label">Rain</span>
+    </label>
+
+    <label class="chip" title="Cycle accent color">
+      <input type="checkbox" id="cycle-accent" />
+      <span class="switch" aria-hidden="true"></span>
+      <span class="label">Pulse</span>
+    </label>
   </div>
 </footer>
 
@@ -337,7 +339,8 @@
       </filter>
     </defs>
   </svg>
-  <script type="module" src="./scripts/script.js"></script>
+  <script type="module" src="./scripts/mainScript.js"></script>
   <script type="module" src="./scripts/terminal.js" defer></script>
+  <script type="module" src="./scripts/header.js" defer></script>
 </body>
 </html>
