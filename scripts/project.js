@@ -18,10 +18,10 @@ const PROJECTS = {
       "Hotkeys, overlay indicators, and translation display.",
     ],
     images: [
-      "../assets/menu.png",
-      "../assets/menu_ocr.png",
-      "../assets/tevi1.png",
-      "../assets/tevi1_ocr.png",
+      "/assets/menu.png",
+      "/assets/menu_ocr.png",
+      "/assets/tevi1.png",
+      "/assets/tevi1_ocr.png",
     ]
   },
   wgcapture: {
