@@ -1,7 +1,6 @@
-
 /* container */
 .holo-id {
-  width: 300px; height: 300px; position: relative;
+  width: 450px; height: 300px; position: relative;
   display: grid; place-items: center;
 }
 
@@ -73,7 +72,7 @@
 
 /* chip */
 .holo-chip {
-  width: 58px; height: 40px; border-radius: 6px;
+  width: 100px; height: 40px; border-radius: 6px;
   background:
     linear-gradient(135deg, #333 0%, #111 100%),
     repeating-linear-gradient(90deg, #0ff6 0 2px, transparent 2px 4px);
@@ -82,7 +81,7 @@
   overflow: hidden;
 }
 .holo-chip::after {
-  content: "CA";
+  content: "Night City";
   position: absolute; inset: 0;
   display: grid; place-items: center;
   font-family: 'Share Tech Mono', monospace;
@@ -145,24 +144,26 @@
 /* tiny “QR” glyph */
 .holo-qr {
   position: absolute; right: 14px; bottom: 16px;
-  width: 54px; height: 54px; display: grid; grid-template-columns: repeat(4,1fr); gap: 2px;
+  width: 60px; height: 60px; display: grid; grid-template-columns: repeat(5,1fr); gap: 2px;
   border: 1px solid #0ff6; padding: 4px; border-radius: 6px; background: #0007;
   box-shadow: inset 0 0 10px #0ff2, 0 0 12px #0ff3;
 }
 .holo-qr span { background: #0ff; opacity: 0.85; }
 /* pattern — tweak which cells are “on” */
-.holo-qr span:nth-child(1),
 .holo-qr span:nth-child(2),
-.holo-qr span:nth-child(3),
+.holo-qr span:nth-child(6),
 .holo-qr span:nth-child(4),
 .holo-qr span:nth-child(5),
-.holo-qr span:nth-child(6),
-.holo-qr span:nth-child(7),
-.holo-qr span:nth-child(10),
-.holo-qr span:nth-child(12),
-.holo-qr span:nth-child(13),
+.holo-qr span:nth-child(8),
+.holo-qr span:nth-child(9),
+.holo-qr span:nth-child(14),
 .holo-qr span:nth-child(15),
-.holo-qr span:nth-child(16) { opacity: 0.15; }
+.holo-qr span:nth-child(16),
+.holo-qr span:nth-child(17),
+.holo-qr span:nth-child(20),
+.holo-qr span:nth-child(21),
+.holo-qr span:nth-child(23),
+.holo-qr span:nth-child(24) { opacity: 0.15; }
 
 /* interactive tilt */
 .holo-frame:hover {

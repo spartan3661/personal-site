@@ -1,4 +1,23 @@
 
+:root {
+  transition: --accent 1.5s ease-in-out;
+}
+
+.cursor, .cursor-dot,
+nav a,
+.btn,
+.badge, .holo-id,
+.section-title {
+  transition: color 1.5s ease-in-out,
+              border-color 1.5s ease-in-out,
+              background 1.5s ease-in-out,
+              box-shadow 1.5s ease-in-out,
+              text-shadow 1.5s ease-in-out;
+}
+
+
+
+
 /* Animated background grid */
 .grid{
   position:fixed; inset:0; pointer-events:none; z-index:-1;
@@ -33,8 +52,11 @@
   transform: translate(-50%, -50%); pointer-events:none; z-index:20;
   box-shadow: 0 0 12px var(--accent), inset 0 0 12px rgba(0,255,255,.3);
   border:1.5px solid var(--accent); backdrop-filter: blur(2px);
+  z-index: 99;
 }
-.cursor-dot{ width:6px; height:6px; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+.cursor-dot{ width:6px; height:6px; background: 
+  var(--accent); box-shadow: 0 0 10px var(--accent); z-index: 99;
+}
 
 
 

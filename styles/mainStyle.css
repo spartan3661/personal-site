@@ -28,6 +28,9 @@
   --maxw: 1200px;
 }
 
+a{
+  cursor: none !important;
+}
 /* Global Reset + Layout */
 *,*::before,*::after{box-sizing:border-box}
 html,body{height:100%}
@@ -39,7 +42,7 @@ body{
               radial-gradient(900px 600px at 0% 80%, rgba(255,43,214,.08), transparent 60%),
               linear-gradient(180deg, var(--bg-0), var(--bg-1) 50%, var(--bg-2));
   overflow-x:hidden;
-  cursor: none; /* we draw our own cursor */
+  cursor: none;
 }
 
 
@@ -47,13 +50,22 @@ body{
 .nav{
   max-width:var(--maxw); margin:0 auto; display:flex; align-items:center; gap:18px;
   padding:12px 18px;
+  cursor: none;
 }
+
 .brand{
   display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text-0);
   letter-spacing:2.5px; font-weight:800; text-transform:uppercase;
   text-shadow: 0 0 8px rgba(0,234,255,.6);
+  cursor: none;
 }
-.brand svg{filter: drop-shadow(0 0 6px var(--accent))}
+.brand:hover{
+  color:var(#00ff66);
+  letter-spacing:2.5px; font-weight:800; text-transform:uppercase;
+  text-shadow: 0 8px 4px var(--neon-cyan);
+  cursor: none;
+}
+.brand svg{filter: drop-shadow(0 0 6px var(--accent)); cursor: none;}
 nav{margin-left:auto; display:flex; gap:12px; flex-wrap:wrap}
 nav a{
   color:var(--link); text-decoration:none; padding:8px 12px; border-radius:999px; position:relative;
@@ -205,7 +217,7 @@ section{padding:72px 18px}
   text-decoration: none;
   color: var(--accent, #00f0ff);  /* neon text */
   position: relative;
-  background: rgba(0, 240, 255, 0.08);  /* see-through fill */
+  background: rgba(0, 240, 255, 0.15);  /* see-through fill */
   border: 1px solid rgba(0, 240, 255, 0.4); /* glowing outline */
   box-shadow:
     0 0 6px rgba(0,240,255,0.6),
@@ -214,6 +226,7 @@ section{padding:72px 18px}
   backdrop-filter: blur(6px) saturate(180%);
   -webkit-backdrop-filter: blur(6px) saturate(180%);
   transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  border-color: var(--accent);
 }
 
 /* stronger glow on hover */
@@ -247,6 +260,61 @@ section{padding:72px 18px}
   background: rgba(0,255,255,0.6);
   box-shadow: 0 0 6px rgba(0,255,255,0.8);
 }
+
+/* A subtle breathing animation that won’t fight hover */
+@keyframes breathe {
+  0%,100% { filter: brightness(1); }
+  50%     { filter: brightness(1.08); } /* tiny luminance swell */
+}
+
+/* Shared base for interactive items that should breathe */
+.is-accented {
+  /* long-ish fades for accent-driven visuals */
+  transition:
+    border-color .9s ease,
+    box-shadow .9s ease,
+    background-color .9s ease,
+    color .9s ease;
+  animation: breathe 3.2s ease-in-out infinite;
+}
+
+/* Buttons */
+
+
+/* Header nav links */
+header nav a {
+  color: var(--link);
+  border-bottom: 1px solid transparent;
+}
+
+/* Apply the breathing + smooth accent fades */
+.btn.is-accented,
+header nav a.is-accented {
+  /* gets the transitions + breathe animation from .is-accented */
+}
+
+/* Hover should be crisp + fast and override breathing */
+.btn:hover,
+header nav a:hover {
+  color: #fff;                               /* force white text */
+  transform: translateY(-2px);               /* your translate effect */
+  transition:
+    transform .16s ease,
+    color .16s ease,
+    background-color .16s ease,
+    border-color .16s ease,
+    box-shadow .16s ease;
+  animation-play-state: paused;              /* pause the breathing while hovered */
+}
+
+/* Optional: add a little glow on hover using the current accent */
+.btn:hover {
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+header nav a:hover {
+  border-bottom-color: var(--accent);
+}
+
 
 .toggle-rain{
   cursor: none;
@@ -428,7 +496,7 @@ footer{
   padding: 6px;
   border-radius: 50%;
   text-decoration: none;
-  cursor: pointer;
+  cursor: none;
 
   background: #ffffff;
   border: 1px solid rgba(var(--accent-rgb, 0,240,255), 0.4);

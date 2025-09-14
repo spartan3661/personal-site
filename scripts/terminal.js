@@ -4,33 +4,134 @@
   const screen   = document.getElementById('term-screen');
   const form     = document.getElementById('term-form');
   const input    = document.getElementById('term-input');
-  const openBtn  = document.getElementById('open-terminal');
   const userEl   = document.getElementById('term-user');
   const hostEl   = document.getElementById('term-host');
   const windowEl = modal?.querySelector('.term-window');
   const rainToggle  = document.getElementById('toggle-rain');
   const pulseToggle = document.getElementById('cycle-accent');
 
-  if (!modal || !screen || !form || !input || !openBtn || !windowEl) return;
+  if (!modal || !screen || !form || !input || !windowEl) return;
+
+
+
+
+  // slug for project keys
+  function slugify(str){
+    return String(str || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  // derive a short key from a URL host (for links)
+  function keyFromHost(u){
+    try {
+      const h = new URL(u, location.href).hostname.replace(/^www\./,'');
+      if (h.includes('github.com')) return 'gh';
+      if (h.includes('twitter.com') || h.includes('x.com')) return 'tw';
+      if (h.includes('linkedin.com')) return 'in';
+      if (h.includes('itch.io')) return 'itch';
+      if (h.includes('youtube.com') || h.includes('youtu.be')) return 'yt';
+      return h.split('.').slice(0,-1).join('.') || 'site';
+    } catch { return 'link'; }
+  }
+
+  // normalize text
+  function cleanText(node){
+    return (node?.textContent || '')
+      .replace(/\s+/g,' ')
+      .trim();
+  }
+
+  function scrapeSiteData(){
+    // --- ABOUT ---
+    const heroLead = cleanText(document.querySelector('.hero .lead'));
+    const heroDescs = [...document.querySelectorAll('.hero .top-desc')]
+      .map(cleanText)
+      .filter(Boolean);
+    const aboutSection = cleanText(document.querySelector('#about .container')) || '';
+
+    const about = heroDescs.length ? heroDescs.join('\n') : (heroLead || aboutSection || 'No about text found.');
+
+
+    // --- SKILLS ---
+    const skillsCards = [...document.querySelectorAll('#skills .card')];
+    const skills = skillsCards.map(c => {
+      const h = cleanText(c.querySelector('h3'));
+      const m = cleanText(c.querySelector('.meta'));
+      return [h, m].filter(Boolean).join(': ');
+    });
+
+    // --- PROJECTS ---
+    const projectCards = [...document.querySelectorAll('#projects .card')];
+    const projects = projectCards.map(card => {
+      const name = cleanText(card.querySelector('h3')) || 'Untitled';
+      const desc = cleanText(card.querySelector('.meta')) || '';
+      const primaryLink = card.querySelector('.actions a');
+      const href = primaryLink?.getAttribute('href') || '#';
+      return {
+        key: slugify(card.getAttribute('data-project') || name),
+        name, desc, url: href
+      };
+    });
+
+    // --- CONTACT ---
+    const contactWrap = document.querySelector('#contact');
+    let email = '';
+    const emailInput = contactWrap?.querySelector('input[type="email"]');
+    if (emailInput?.value || emailInput?.placeholder) {
+      // Firefox Relay will be in your form config or placeholder
+      email = emailInput.value || emailInput.placeholder;
+    }
+    const locationGuess = 'Cyberspace';
+
+    // --- LINKS ---
+    const linkSet = new Map();
+    linkSet.set('site', { key:'site', label:'Website', url: location.origin });
+
+    const resumeA = document.querySelector('a[download]');
+    if (resumeA?.href) {
+      linkSet.set('resume', { key:'resume', label:'Resume', url: resumeA.href });
+    }
+
+    document.querySelectorAll('#projects .actions a[href]').forEach(a => {
+      const url = a.getAttribute('href');
+      if (!url || url === '#') return;
+      const key = keyFromHost(url);
+      if (!linkSet.has(key)) linkSet.set(key, { key, label: key.toUpperCase(), url });
+    });
+
+    return {
+      about,
+      skills,
+      projects,
+      contact: { email, location: locationGuess },
+      links: [...linkSet.values()]
+    };
+  }
+
+
 
   /* ---------- tiny state ---------- */
+  const LS_KEY = 'info-daemon.term.history';
+  const persistedHistory = (() => {
+    try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { return []; }
+  })();
+
   const state = {
     user: 'info-daemon',
-    host: '_____',
+    host: (location.hostname || 'localhost') || 'localhost',
     cwd: '~',
-    history: [],
-    histIndex: -1,
-    effects: {
-      flicker: true,
-      warp: true
-    },
+    history: persistedHistory.slice(-200), // keep last 200
+    histIndex: persistedHistory.length,
+    effects: { flicker: true, warp: true },
     files: [
       'README.md',
       'about.txt',
       'skills.txt',
-      'projects',
       'contact.txt',
-      'links'
+      'projects',      // dir
+      'links'          // pseudo file
     ],
     data: {
       about: `Hi, I’m Neon You — a frontend engineer who loves micro-interactions and performance. I build reactive UIs, motion systems, and WebGL toys.`,
@@ -41,15 +142,14 @@
         'Tooling: Vite, Playwright, Storybook'
       ],
       projects: [
-        { name: 'GhostGrid', desc: 'WebGL neon grid renderer (parallax + glow)', url: '#' },
-        { name: 'HoloUI', desc: 'Holographic component kit (bloom & layers)', url: '#' },
-        { name: 'PhotonOps', desc: 'RUM budget enforcer + anomaly detection', url: '#' }
+        { key: 'ghostgrid', name: 'GhostGrid', desc: 'WebGL neon grid renderer (parallax + glow)', url: '#' },
+        { key: 'holoui',    name: 'HoloUI',    desc: 'Holographic component kit (bloom & layers)', url: '#' },
+        { key: 'photonops', name: 'PhotonOps', desc: 'RUM budget enforcer + anomaly detection',   url: '#' }
       ],
       contact: { email: 'you@example.com', location: 'Night City, Net' },
       links: [
-        { key: 'site', label: 'Website', url: 'google.com' },
-        { key: 'gh', label: 'GitHub', url: '#' },
-        { key: 'tw', label: 'Twitter', url: '#' }
+        { key: 'site', label: 'Website', url: 'https://google.com' },
+        { key: 'gh',   label: 'GitHub',  url: '#' },
       ]
     }
   };
@@ -66,20 +166,29 @@
     screen.classList.toggle('fx-flicker', !!state.effects.flicker);
   }
 
-  function openModal(e) {
-    e && e.preventDefault();
-    lastFocus = document.activeElement;
-    modal.setAttribute('aria-hidden', 'false');
-    document.addEventListener('keydown', onKeyGlobal);
-    modal.addEventListener('keydown', trapFocus);
-    setTimeout(() => input.focus(), 0);
-    printMotd();
-    applyEffects();
-  }
+function openModal(e) {
+  if (e) e.preventDefault();
+  lastFocus = document.activeElement;
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  document.addEventListener('keydown', onKeyGlobal);
+  modal.addEventListener('keydown', trapFocus);
+
+  // 🔽 populate terminal from live DOM
+  try { state.data = scrapeSiteData(); } catch {}
+
+  setTimeout(() => input.focus(), 0);
+  printMotd();
+  applyEffects();
+  updateOpenersExpanded(true);
+}
+
   function closeModal() {
     modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
     document.removeEventListener('keydown', onKeyGlobal);
     modal.removeEventListener('keydown', trapFocus);
+    updateOpenersExpanded(false);
     lastFocus && lastFocus.focus();
   }
   function trapFocus(e) {
@@ -87,21 +196,38 @@
     const focusables = modal.querySelectorAll(focusablesSel);
     const first = focusables[0];
     const last = focusables[focusables.length - 1];
+    if (!first || !last) return;
     if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   }
   function onKeyGlobal(e){
     if (e.key === 'Escape') closeModal();
-    // history
     if (document.activeElement === input) {
       if (e.key === 'ArrowUp') { e.preventDefault(); histPrev(); }
       if (e.key === 'ArrowDown') { e.preventDefault(); histNext(); }
       if (e.key === 'Tab') { e.preventDefault(); doAutocomplete(); }
     }
+    // open anywhere via "~"
+    if (e.key === '`' || e.key === '~') {
+      const isOpen = modal.getAttribute('aria-hidden') === 'false';
+      if (isOpen) closeModal(); else openModal();
+    }
   }
 
+  // close buttons + backdrop
   modal.querySelectorAll('[data-term-close]').forEach(b => b.addEventListener('click', closeModal));
-  openBtn.addEventListener('click', openModal);
+  modal.addEventListener('click', (e)=>{ if (e.target.classList.contains('term-backdrop')) closeModal(); });
+
+  // Handle both header and floating island openers
+  function updateOpenersExpanded(expanded){
+    document.querySelectorAll('[aria-controls="terminal-modal"]').forEach(btn => {
+      btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    });
+  }
+  document.addEventListener('click', (e) => {
+    const opener = e.target.closest('[aria-controls="terminal-modal"]');
+    if (opener) { e.preventDefault(); openModal(); }
+  });
 
   /* ---------- helpers ---------- */
   const el = (tag, cls, html) => {
@@ -119,22 +245,24 @@
     const p = `<span class="dim">${state.user}@${state.host}</span>:<span class="path">${state.cwd}</span>$ <span class="cmd">${escapeHtml(cmd)}</span>`;
     echo(p);
   }
-  function escapeHtml(s){
-    return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  }
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
   function printMotd(){
     if (screen.dataset.booted) return;
-    echo(`Welcome, <span class="hl">${state.user}</span>. Old-school terminal engaged.`, 'term-line');
-    echo(`Type <span class="hl">help</span> for commands. Use <span class="hl">↑</span>/<span class="hl">↓</span> for history, <span class="hl">Tab</span> to autocomplete.`, 'term-line');
+    echo(`Welcome, <span class="hl">${state.user}</span>. Old-school terminal engaged.`, 'term-line boot');
+    echo(`Type <span class="hl">help</span> for commands. Use <span class="hl">↑</span>/<span class="hl">↓</span> for history, <span class="hl">Tab</span> to autocomplete.`, 'term-line boot');
     screen.dataset.booted = '1';
   }
 
   /* ---------- history ---------- */
+  function persistHistory(){
+    try { localStorage.setItem(LS_KEY, JSON.stringify(state.history.slice(-200))); } catch {}
+  }
   function pushHistory(cmd){
     if (!cmd) return;
     if (state.history[state.history.length-1] !== cmd) state.history.push(cmd);
     state.histIndex = state.history.length;
+    persistHistory();
   }
   function histPrev(){
     if (!state.history.length) return;
@@ -158,136 +286,201 @@
     'rain','pulse'
   ];
 
-  // toggles rain or pulse
-  function setToggle(el, on){
-    if (!el) return false;
-    el.checked = !!on;
-    el.dispatchEvent(new Event('change', { bubbles: true })); // triggers your existing listeners
-    return true;
+  function tokenise(raw){
+    // simple shell-ish parse: respects quoted strings
+    const out = [];
+    let cur = '', inQ = false, q = '';
+    for (let i=0;i<raw.length;i++){
+      const c = raw[i];
+      if (!inQ && /\s/.test(c)) { if (cur) { out.push(cur); cur=''; } continue; }
+      if ((c === '"' || c === "'")) {
+        if (!inQ) { inQ=true; q=c; continue; }
+        if (q === c) { inQ=false; continue; }
+      }
+      cur += c;
+    }
+    if (cur) out.push(cur);
+    return out;
   }
 
   function doAutocomplete(){
-    const raw = input.value.trim();
-    const [cmd, ...rest] = raw.split(/\s+/);
-    if (!cmd) return;
+    const raw = input.value;
+    const parts = tokenise(raw);
+    if (!parts.length) return;
+    const [cmd, ...rest] = parts;
 
-    if (rest.length === 0) {
+    // command name completion
+    if (parts.length === 1) {
       const matches = COMMANDS.filter(c => c.startsWith(cmd));
-      if (matches.length === 1) { input.value = matches[0] + ' '; }
-      else if (matches.length > 1) { echo(matches.join('  ')); }
+      if (matches.length === 1) input.value = matches[0] + ' ';
+      else if (matches.length > 1) echo(matches.join('  '));
       return;
     }
 
-    // args: try file/keys
+    // argument completion pools
+    const pool = [
+      ...state.files,                                    // files / pseudo files
+      ...state.data.links.map(l => l.key),               // site link keys
+      ...state.data.projects.map(p => 'projects/' + p.key), // project pseudo-paths
+      'on','off'
+    ];
     const arg = rest[rest.length-1];
-    const pool = [...state.files, ...state.data.links.map(l => l.key), 'on','off'];
     const matches = pool.filter(x => x.startsWith(arg));
     if (matches.length === 1) {
-      input.value = cmd + ' ' + rest.slice(0,-1).join(' ') + (rest.length>1?' ':'') + matches[0];
+      input.value = cmd + ' ' + [...rest.slice(0,-1), matches[0]].join(' ');
     } else if (matches.length > 1) {
       echo(matches.join('  '));
     }
   }
 
-  /* ---------- command handlers ---------- */
+  /* ---------- command helpers ---------- */
+  function fmtList(arr){ return arr.join('  '); }
+  function ensureUrl(u){
+    if (/^https?:\/\//i.test(u)) return u;
+    return 'https://' + u;
+  }
+
+  /* ---------- command handlers (all except cd fully implemented) ---------- */
   const handlers = {
     help(){
       echo([
-        'Available commands:',
-        '  help, clear, history',
-        '  ls, cat <file>',
-        '  whoami, about, skills, projects, contact, links',
-        '  echo <text>',
-        '  open <key|url>',
-        '  pwd, cd (cd is cosmetic)',
-        '  date',
-        '  flicker <on|off>   # toggle text flicker',
-        '  warp <on|off>      # toggle CRT fisheye',
-        '  rain <on|off>      # toggle site wide rain',
-        '  pulse <on|off>     # toggle site wide pulse'
-
+        '<span class="v">Available commands</span>',
+        `  help, clear, history`,
+        `  ls [dir], cat ${escapeHtml('<file|projects/key>')}`,
+        `  whoami, about, skills, projects, contact, links`,
+        `  echo ${escapeHtml('<text>')}`,
+        `  open ${escapeHtml('<key|url>')}`,
+        `  pwd, cd (cd is cosmetic)`,
+        `  date`,
+        `  flicker ${escapeHtml('<on|off>')}   # toggle text flicker`,
+        `  warp ${escapeHtml('<on|off>')}      # toggle CRT fisheye`,
+        `  rain ${escapeHtml('<on|off>')}      # toggle site wide rain`,
+        `  pulse ${escapeHtml('<on|off>')}     # toggle site wide pulse`
       ].join('\n'));
     },
+
     clear(){ screen.innerHTML = ''; },
-    history(){ echo(state.history.map((h,i)=>`${i+1}  ${h}`).join('\n') || '(empty)'); },
-    ls(){
-      const files = state.files.map(f => /[.]/.test(f) ? f : f + '/');
-      echo(files.join('  '));
+
+    history(){ echo(state.history.map((h,i)=>`${String(i+1).padStart(3,' ')}  ${escapeHtml(h)}`).join('\n') || '(empty)'); },
+
+    ls(arg){
+      if (!arg || arg === '.') {
+        const files = state.files.map(f => (/\./.test(f)? f : f + '/'));
+        echo(fmtList(files));
+        return;
+      }
+      if (arg === 'projects' || arg === 'projects/') {
+        const names = state.data.projects.map(p => p.key + '/');
+        echo(fmtList(names));
+        return;
+      }
+      echo(`ls: cannot access '${escapeHtml(arg)}': No such file or directory`, 'err');
     },
+
     cat(arg){
       if (!arg) return echo('cat: missing file operand', 'err');
+
+      // projects/<key> support
+      if (arg.startsWith('projects/')) {
+        const key = arg.split('/')[1];
+        const p = state.data.projects.find(x => x.key === key);
+        if (!p) return echo(`cat: ${escapeHtml(arg)}: No such file or directory`, 'err');
+        const url = p.url && p.url !== '#' ? p.url : '(no url)';
+        echo(`== ${p.name} ==\n${p.desc}\nURL: ${url}`);
+        return;
+      }
+
       switch(arg){
         case 'README.md':
-          echo(`# Info•Daemon Terminal\nUse 'help' to see commands.\nTry: about, projects, contact`); break;
+          echo(`# Info•Daemon Terminal
+Use 'help' to see commands.
+Try: about, projects, contact`); break;
         case 'about.txt':
-          echo(state.data.about); break;
+          echo(escapeHtml(state.data.about)); break;
         case 'skills.txt':
-          echo(state.data.skills.join('\n')); break;
+          echo(state.data.skills.map(s=>` - ${escapeHtml(s)}`).join('\n')); break;
         case 'contact.txt':
-          echo(`Email: ${state.data.contact.email}\nLocation: ${state.data.contact.location}`); break;
+          echo(`Email: bcfrx2168@mozmail.com (relay masked) Location: Night City`); break;
         case 'projects':
+        case 'projects/':
           echo('cat: projects: Is a directory'); break;
         case 'links':
           echo(state.data.links.map(l=>`${l.key}  ${l.label}  ${l.url}`).join('\n')); break;
         default:
-          echo(`cat: ${arg}: No such file or directory`, 'err');
+          echo(`cat: ${escapeHtml(arg)}: No such file or directory`, 'err');
       }
     },
-    echo(...args){ echo(args.join(' ')); },
-    whoami(){ echo(`${state.user}`); },
-    about(){ echo(state.data.about); },
-    skills(){ echo(state.data.skills.map(s=>' - '+s).join('\n')); },
+
+    echo(...args){ echo(escapeHtml(args.join(' '))); },
+
+    whoami(){ echo(`${escapeHtml(state.user)}`); },
+
+    about(){ echo(escapeHtml(state.data.about)); },
+
+    skills(){ echo(state.data.skills.map(s=>' - '+escapeHtml(s)).join('\n')); },
+
     projects(){
-      echo(state.data.projects.map(p=>`* ${p.name} — ${p.desc}${p.url && p.url!=='#' ? ' ['+p.url+']':''}`).join('\n'));
+      echo(state.data.projects.map(p => `* ${p.name} — ${p.desc}${p.url && p.url!=='#' ? ' ['+p.url+']':''}`).join('\n'));
     },
+
     contact(){
-      echo(`Email: ${state.data.contact.email}\nLocation: ${state.data.contact.location}\nTip: open site | gh | tw`);
+      echo(`Email: bcfrx2168@mozmail.com (relay mask) Location: Night City}`);
+      echo('Tip: open site | gh | tw')
     },
+
     links(){
-      echo(state.data.links.map(l=>`${l.key.padEnd(6)} -> ${l.url}`).join('\n'));
+      const w = Math.max(...state.data.links.map(l=>l.key.length));
+      echo(state.data.links.map(l=>`${l.key.padEnd(w)} -> ${l.url}`).join('\n'));
     },
+
     open(target){
       if (!target) return echo('open: missing operand', 'err');
       const link = state.data.links.find(l=>l.key===target);
-      const url = link ? link.url : (/^https?:\/\//.test(target) ? target : null);
-      if (!url || url === '#') return echo(`open: cannot open '${target}'`, 'err');
-      window.open(url, '_blank', 'noopener,noreferrer');
-      echo(`opening ${url} …`);
+      const url = link ? link.url : (/^https?:\/\//i.test(target) ? target : ensureUrl(target));
+      if (!url || url === '#') return echo(`open: cannot open '${escapeHtml(target)}'`, 'err');
+      try { window.open(url, '_blank', 'noopener,noreferrer'); } catch {}
+      echo(`opening ${escapeHtml(url)} …`);
     },
-    date(){ echo(new Date().toString()); },
-    pwd(){ echo(`/home/${state.user}/${state.cwd === '~' ? '' : state.cwd}`.replace(/\/$/,'')); },
+
+    date(){
+      const d = new Date();
+      // pretty RFC-ish output
+      echo(d.toString());
+    },
+
+    pwd(){
+      const path = `/home/${state.user}/${state.cwd === '~' ? '' : state.cwd}`.replace(/\/$/,'');
+      echo(path);
+    },
+
+    // cd is cosmetic / no-op except cosmetic prompt (per your request)
     cd(arg){
       if (!arg || arg === '~' || arg === '/') { state.cwd='~'; }
       else if (arg === '..') { state.cwd='~'; }
-      else { state.cwd = arg.replace(/\/+/g,''); }
+      else { state.cwd = String(arg).replace(/\/+/g,''); }
     },
+
     flicker(arg){
-      if (!arg) {
-        return echo(`flicker is ${state.effects.flicker ? 'on' : 'off'} (try "flicker on" or "flicker off")`);
-      }
+      if (!arg) return echo(`flicker is ${state.effects.flicker ? 'on' : 'off'} (try "flicker on" or "flicker off")`);
       const val = /^(on|off)$/i.test(arg) ? arg.toLowerCase() : null;
       if (!val) return echo(`flicker: expected 'on' or 'off'`, 'err');
       state.effects.flicker = (val === 'on');
       applyEffects();
       echo(`flicker ${val}`);
     },
+
     warp(arg){
-      if (!arg) {
-        return echo(`warp is ${state.effects.warp ? 'on' : 'off'} (try "warp on" or "warp off")`)
-      };
+      if (!arg) return echo(`warp is ${state.effects.warp ? 'on' : 'off'} (try "warp on" or "warp off")`);
       const val = /^(on|off)$/i.test(arg) ? arg.toLowerCase() : null;
       if (!val) return echo(`warp: expected 'on' or 'off'`, 'err');
       state.effects.warp = (val === 'on');
       applyEffects();
       echo(`warp ${val}`);
-
-      
     },
+
     rain(arg){
       if (!rainToggle) return echo('rain: toggle not found', 'err');
-      if (!arg) {
-        return echo(`rain is ${rainToggle.checked ? 'on' : 'off'} (try "rain on" or "rain off")`);
-      }
+      if (!arg) return echo(`rain is ${rainToggle.checked ? 'on' : 'off'} (try "rain on" or "rain off")`);
       const val = /^(on|off)$/i.test(arg) ? arg.toLowerCase() : null;
       if (!val) return echo(`rain: expected 'on' or 'off'`, 'err');
       setToggle(rainToggle, val === 'on');
@@ -296,67 +489,60 @@
 
     pulse(arg){
       if (!pulseToggle) return echo('pulse: toggle not found', 'err');
-      if (!arg) {
-        return echo(`pulse is ${pulseToggle.checked ? 'on' : 'off'} (try "pulse on" or "pulse off")`);
-      }
+      if (!arg) return echo(`pulse is ${pulseToggle.checked ? 'on' : 'off'} (try "pulse on" or "pulse off")`);
       const val = /^(on|off)$/i.test(arg) ? arg.toLowerCase() : null;
       if (!val) return echo(`pulse: expected 'on' or 'off'`, 'err');
       setToggle(pulseToggle, val === 'on');
       echo(`pulse ${val}`);
     },
-
   };
+
+  /* ---------- toggles ---------- */
+  function setToggle(el, on){
+    if (!el) return false;
+    el.checked = !!on;
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    return true;
+  }
 
   /* ---------- form submit ---------- */
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const raw = input.value;
-    const cmdline = raw.trim();
-    if (!cmdline) return;
+    const parts = tokenise(raw.trim());
+    if (!parts.length) return;
 
-    promptLine(cmdline);
-    pushHistory(cmdline);
-    input.value = '';
-
-    const parts = cmdline.split(/\s+/);
     const cmd = parts[0];
     const args = parts.slice(1);
 
+    promptLine(raw);
+    pushHistory(raw);
+    input.value = '';
+
     if (handlers[cmd]) {
       try { handlers[cmd](...args); }
-      catch(err){ echo(`error: ${err.message}`, 'err'); }
+      catch(err){ echo(`error: ${escapeHtml(err.message)}`, 'err'); }
     } else {
-      echo(`${cmd}: command not found`, 'err');
+      echo(`${escapeHtml(cmd)}: command not found`, 'err');
       echo(`Type 'help' to see available commands.`);
     }
   });
 
-  /* accessibility: close on backdrop click */
-  modal.addEventListener('click', (e)=>{
-    if (e.target.classList.contains('term-backdrop')) closeModal();
-  });
-
-  /* ================= micro “pop” flicker =================
-     Occasionally blip a random recent output line for extra CRT realism.
-  -------------------------------------------------------- */
+  /* ================= micro “pop” flicker ================= */
   function randomFlickerTick(){
     if (!state.effects.flicker) return;
     const lines = screen.querySelectorAll('.term-line');
     if (!lines.length) return;
-    const idx = Math.max(0, lines.length - 1 - Math.floor(Math.random()*6)); // among last ~6 lines
+    const idx = Math.max(0, lines.length - 1 - Math.floor(Math.random()*6));
     const el = lines[idx];
     if (!el) return;
     el.style.transition = 'filter .05s ease, opacity .05s ease';
     el.style.filter = 'blur(.2px) brightness(1.25)';
     el.style.opacity = '0.92';
-    setTimeout(()=>{
-      el.style.filter = '';
-      el.style.opacity = '';
-    }, 65 + Math.random()*120);
+    setTimeout(()=>{ el.style.filter = ''; el.style.opacity = ''; }, 65 + Math.random()*120);
   }
   setInterval(randomFlickerTick, 500 + Math.random()*1200);
 
   // initialize applied classes on first load (in case opened immediately)
   applyEffects();
-
 })();

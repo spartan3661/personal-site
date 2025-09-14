@@ -5,15 +5,45 @@ const $ = (sel, ctx=document)=> ctx.querySelector(sel);
 const $$ = (sel, ctx=document)=> [...ctx.querySelectorAll(sel)];
 const nav = document.querySelector("header");
 // Accent cycling
-const accents = ["#00eaff","#ff2bd6","#67ff85","#ffe359"];
+const accents = [
+  "#00eaff",
+  "#67ff85",
+  "#ffe359",
+  "#ff2bd6",
+  "#9d4bff",
+  "#ff6b00",
+  "#ccff00",
+  "#ff1744"
+];
 let accentIndex = 0;
-function setAccent(color){
-  document.documentElement.style.setProperty('--accent', color);
-  document.documentElement.style.setProperty('--link', color);
+let accentTimer = null;
+
+function setAccent(c){
+  const root = document.documentElement;
+  root.style.setProperty('--accent', c);
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', color);
+  if (meta) meta.setAttribute('content', c);
 }
-setAccent(accents[0]);
+
+function startAccentCycle(){
+  if (accentTimer) clearInterval(accentTimer);
+  accentTimer = setInterval(() => {
+    accentIndex = (accentIndex + 1) % accents.length;
+    setAccent(accents[accentIndex]); // CSS will fade this
+  }, 1800);
+}
+function stopAccentCycle(){
+  if (accentTimer){ clearInterval(accentTimer); accentTimer = null; }
+}
+
+// boot
+setAccent(accents[accentIndex]);
+const cycleBox = document.querySelector('#cycle-accent');
+if (cycleBox){
+  cycleBox.addEventListener('change', e => e.target.checked ? startAccentCycle() : stopAccentCycle());
+  cycleBox.checked = true; // start ON
+  startAccentCycle();
+}
 
 
 // Console boot messages
@@ -134,16 +164,10 @@ $("#toggle-rain")?.addEventListener('change', (e)=>{
   rainActive = e.target.checked;
   if(rainActive) drawRain();
 });
-$("#cycle-accent")?.addEventListener('change', (e)=>{
-  if(e.target.checked){
-    e.target._int = setInterval(()=>{
-      accentIndex = (accentIndex+1)%accents.length;
-      setAccent(accents[accentIndex]);
-    }, 1800);
-  } else {
-    clearInterval(e.target._int);
-  }
-});
+
+
+
+
 
 // Custom cursor
 const cursor = $(".cursor");

@@ -8,6 +8,9 @@ header {
     box-shadow .35s ease,
     opacity .35s ease;
 }
+.header:hover{
+    cursor: none;
+}
 
 header.island {
   position: fixed;

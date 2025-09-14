@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="./styles/effects.css" />
   <link rel="stylesheet" href="./styles/ID.css" />
   <link rel="stylesheet" href="./styles/header.css" />
+  <link rel="stylesheet" href="./styles/project.css" />
+
 </head>
 <body>
   <!-- background layers -->
@@ -64,13 +66,13 @@
         </p>
         <!-- remember to change this!-->>
         <p class="top-desc">
-          Identity: Subject 2077 (Ben Carnes) — creative computing and systems integration.
+          Identity: Subject 2077 (Ben Carnes), software developer - Creative Computing & Systems Integration.
         </p>
-        <p class="top-desc">Report: As of now, Subject 2077's work spans from across the stack from user applications, to full stack development and a touch lower level systems.</p>
+        <p class="top-desc">Report: As of now, Subject 2077's work spans from across the stack from user applications, to full stack development and a touch of lower level systems.</p>
         <div class="cta">
-          <a class="btn" href="#projects" aria-label="View Projects">View Projects</a>
-          <a class="btn" href="#contact" aria-label="Contact Me">Contact</a>
-          <a class="btn" href="./assets/ZONGYU_CARNES_V3.pdf" download aria-label="Download Resume">Resume</a>
+          <a class="btn is-accented" href="#projects" aria-label="View Projects">View Projects</a>
+          <a class="btn is-accented" href="#contact" aria-label="Contact Me">Contact</a>
+          <a class="btn is-accented" href="./assets/ZONGYU_CARNES_V3.pdf" download aria-label="Download Resume">Resume</a>
         </div>
         <div class="stats" role="list" aria-label="Quick stats">
           <div class="stat" role="listitem"><b>2</b> Side Projects in Progress</div>
@@ -125,10 +127,11 @@
 
             <!-- tiny QR-ish glyph -->
             <div class="holo-qr" aria-hidden="true">
-              <span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
             </div>
           </div>
         </div>
@@ -163,7 +166,7 @@
         <h2 class="section-title">/ Projects</h2>
         <div class="grid-cards" role="list">
 
-          <article class="card" role="listitem">
+          <article class="card" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="project-modal" data-project="gamegrab">
             <span class="tag">Python/C++</span>
             <h3>Gamegrab</h3>
             <p class="meta">Desktop OCR + translation for PC games built with PySide6 GUI, EasyOCR, and a C++ capture backend.</p>
@@ -173,7 +176,7 @@
               </a>
             </div>
           </article>
-          <article class="card" role="listitem">
+          <article class="card" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="project-modal" data-project="wgcapture">
             <span class="tag">Python/C++</span>
             <h3>WGCapture</h3>
             <p class="meta">PyPI package enabling highly consistent per-window screen capture via GPU-backed frame pooling.</p>
@@ -184,7 +187,7 @@
             </div>
           </article>
 
-          <article class="card" role="listitem">
+          <article class="card" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="project-modal" data-project="cck3">
             <span class="tag">C++</span>
             <h3>Chamber Crawler 3000+</h3>
             <p class="meta">A console driven rogue like dungeon crawler.</p>
@@ -236,7 +239,7 @@
           <label><input name="name" required placeholder="Your Name" autocomplete="name" /></label>
           <label><input name="email" type="email" required placeholder="Your email..." autocomplete="email" /></label>
           <label><textarea name="message" required placeholder="Transmit a message…"></textarea></label>
-          <button class="btn" type="submit">Send Transmission</button>
+          <button class="btn is-accented" type="submit">Send Transmission</button>
           <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
             <span class="small">Psst! I am not evil :) </span>
           </div>
@@ -275,7 +278,7 @@
     </label>
 
     <label class="chip" title="Cycle accent color">
-      <input type="checkbox" id="cycle-accent" />
+      <input type="checkbox" id="cycle-accent" checked/>
       <span class="switch" aria-hidden="true"></span>
       <span class="label">Pulse</span>
     </label>
@@ -339,6 +342,16 @@
       </filter>
     </defs>
   </svg>
+
+  <!-- Project Modal Root -->
+  <div class="project-modal" id="project-modal" role="dialog" aria-modal="true" aria-labelledby="project-modal-title" aria-hidden="true">
+    <div class="project-backdrop" data-project-close></div>
+    <div class="project-window" role="document">
+      <!-- content injected by project.js -->
+    </div>
+    <link rel="preload" href="./icons/github.svg" as="image" />
+  </div>
+  <script type="module" src="./scripts/project.js"></script>
   <script type="module" src="./scripts/mainScript.js"></script>
   <script type="module" src="./scripts/terminal.js" defer></script>
   <script type="module" src="./scripts/header.js" defer></script>
