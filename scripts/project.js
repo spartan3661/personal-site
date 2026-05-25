@@ -22,7 +22,7 @@ const PROJECTS = {
       "assets/menu_ocr.png",
       "assets/tevi1.png",
       "assets/tevi1_ocr.png",
-    ]
+    ],
   },
   wgcapture: {
     title: "WGCapture",
@@ -39,34 +39,43 @@ const PROJECTS = {
       "Easy installation using pip install wgcapture.",
     ],
   },
-  cck3: {
-    title: "Chamber Crawler 3000+",
-    blurb: `Chamber Crawler 3000+ (CC3k+) was a course project where I built a simple console-based roguelike in C++. Players can explore chambers, fight enemies, and pick up items — all rendered as text in the terminal.\n
-  While it’s incomplete and only coursework, it gave me solid practice with C++ fundamentals like OOP design, RAII, and C++ design patterns.`,
-    tech: ["C++"],
-    links: [{ label: "GitHub", href: "https://github.com/spartan3661/cck3" }],
-    bullets: [
-      "Turn-based movement and combat loop.",
-      "Fixed floor generation.",
-      "Implementing a variety of OOP principles.",
+
+  watonomous: {
+    title: "WATonomous Simulation",
+    blurb: `WATonomous Simulation was an autonomous-driving simulation project built around a Dockerized robotics development environment. The project gave me hands-on experience working in a robotics-style codebase with C++, Python, Shell scripts, Docker, and CMake.
+
+    I worked with the provided monorepo structure to understand how perception, planning, control, and supporting scripts fit together in an autonomous vehicle workflow. Since the setup was containerized, I also got more comfortable with reproducible development environments and the practical tooling used by robotics teams.
+
+    Through this project I learned how to navigate a larger robotics codebase, work with Linux-based development workflows, and connect simulation logic with modular source code.`,
+    tech: ["ROS2", "C++"],
+    links: [
+      {
+        label: "GitHub",
+        href: "https://github.com/spartan3661/watonomous-sim",
+      },
     ],
+    bullets: [
+      "Worked in a Dockerized robotics simulation environment.",
+      "Explored autonomous-driving project structure across config, modules, scripts, and source code.",
+      "Gained experience with Linux, CMake, shell tooling, and robotics-style development workflows.",
+    ],
+    images: ["assets/ros2.png"],
+    videos: ["assets/ros2-demo.mp4"],
   },
 };
 
 function ghBase() {
   // Works for both user/organization pages (/) and project pages (/repo/)
-  const parts = location.pathname.split('/').filter(Boolean);
-  return parts.length ? `/${parts[0]}/` : '/';
+  const parts = location.pathname.split("/").filter(Boolean);
+  return parts.length ? `/${parts[0]}/` : "/";
 }
 function withBase(path) {
   // If already absolute or full URL, leave it
   if (/^https?:\/\//i.test(path)) return path;
-  if (path.startsWith('/')) return path; // you probably won't use this on project pages
+  if (path.startsWith("/")) return path; // you probably won't use this on project pages
   // If it already starts with 'assets/' or 'icons/', just prefix the base
-  return ghBase() + path.replace(/^(\.\/)+/, '');
+  return ghBase() + path.replace(/^(\.\/)+/, "");
 }
-
-
 
 const modal = document.getElementById("project-modal");
 const win = modal?.querySelector(".project-window");
@@ -76,10 +85,13 @@ let teardownCarousel = null;
 // focus trap
 let lastFocused = null;
 const getFocusable = (root) =>
-  [...root.querySelectorAll(
-    'a[href], button, input, textarea, select, details,[tabindex]:not([tabindex="-1"])'
-  )].filter(el => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'));
-
+  [
+    ...root.querySelectorAll(
+      'a[href], button, input, textarea, select, details,[tabindex]:not([tabindex="-1"])',
+    ),
+  ].filter(
+    (el) => !el.hasAttribute("disabled") && !el.getAttribute("aria-hidden"),
+  );
 
 function openModal(key) {
   const data = PROJECTS[key];
@@ -87,8 +99,13 @@ function openModal(key) {
 
   lastFocused = document.activeElement;
 
-  const hasImages = Array.isArray(data.images) && data.images.length > 0;
-  const multipleImages = hasImages && data.images.length > 1;
+  const mediaItems = [
+    ...(data.images || []).map((src) => ({ type: "image", src })),
+    ...(data.videos || []).map((src) => ({ type: "video", src })),
+  ];
+
+  const hasMedia = mediaItems.length > 0;
+  const multipleMedia = mediaItems.length > 1;
   win.innerHTML = `
     <header class="pm-chrome">
       <h3 id="project-modal-title" class="pm-title">${escapeHtml(data.title)}</h3>
@@ -98,34 +115,37 @@ function openModal(key) {
     </header>
 
     <section class="pm-body" id="project-modal-body" aria-describedby="project-modal-desc">
-      ${hasImages ? `
-        <div class="pm-media" role="group" aria-label="Project images">
-          <div class="pm-carousel">
-            <button class="pm-nav pm-nav-prev" data-carousel-prev aria-label="Previous image" ${multipleImages ? "" : "hidden"}>‹</button>
-            <div class="pm-frame">
-              <img
-                class="pm-img"
-                src="${data.images[0] || ''}"
-                alt="${escapeHtml(data.title)} screenshot 1"
-                loading="lazy"
-                data-carousel-img
-                data-index="0"
-              />
-            </div>
-            <button class="pm-nav pm-nav-next" data-carousel-next aria-label="Next image" ${multipleImages ? "" : "hidden"}>›</button>
-          </div>
-          ${multipleImages ? `
-            <div class="pm-dots" role="tablist" aria-label="Image selector">
-              ${data.images.map((_, i) => `
-                <button class="pm-dot ${i === 0 ? 'is-active' : ''}" role="tab"
-                        aria-selected="${i === 0 ? 'true' : 'false'}"
-                        aria-label="Show image ${i + 1}"
-                        data-dot="${i}"></button>
-              `).join("")}
-            </div>
-          ` : ""}
-        </div>
-      ` : ""}
+${
+  hasMedia
+    ? `
+  <div class="pm-media" role="group" aria-label="Project media">
+    <div class="pm-carousel">
+      <button class="pm-nav pm-nav-prev" data-carousel-prev aria-label="Previous media" ${multipleMedia ? "" : "hidden"}>‹</button>
+      <div class="pm-frame" data-carousel-frame></div>
+      <button class="pm-nav pm-nav-next" data-carousel-next aria-label="Next media" ${multipleMedia ? "" : "hidden"}>›</button>
+    </div>
+    ${
+      multipleMedia
+        ? `
+      <div class="pm-dots" role="tablist" aria-label="Media selector">
+        ${mediaItems
+          .map(
+            (_, i) => `
+          <button class="pm-dot ${i === 0 ? "is-active" : ""}" role="tab"
+                  aria-selected="${i === 0 ? "true" : "false"}"
+                  aria-label="Show media ${i + 1}"
+                  data-dot="${i}"></button>
+        `,
+          )
+          .join("")}
+      </div>
+    `
+        : ""
+    }
+  </div>
+`
+    : ""
+}
 
       <div class="pm-blurb" id="project-modal-desc">${escapeHtml(data.blurb)}</div>
 
@@ -134,39 +154,54 @@ function openModal(key) {
         <span>${data.tech.map(escapeHtml).join(" • ")}</span>
       </div>
 
-      ${data.bullets?.length ? `
+      ${
+        data.bullets?.length
+          ? `
       <ul class="pm-list">
-        ${data.bullets.map(item => `<li>${escapeHtml(item)}</li>`).join("")}
-      </ul>` : ""}
+        ${data.bullets.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+      </ul>`
+          : ""
+      }
     </section>
 
     <footer class="pm-footer">
       <span class="pm-hint">Explore source & docs</span>
-      ${data.links?.length ? `
-        ${data.links.map(link => `
+      ${
+        data.links?.length
+          ? `
+        ${data.links
+          .map(
+            (link) => `
           <a class="pm-icon-link"
               href="${escapeAttr(link.href)}"
               target="_blank" rel="noopener noreferrer"
               title="${escapeHtml(link.label)}">
-              <img src="${withBase('icons/github.svg')}" alt="${escapeHtml(link.label)}" />
+              <img src="${withBase("icons/github.svg")}" alt="${escapeHtml(link.label)}" />
           </a>
-        `).join("")}
-      ` : ""}
+        `,
+          )
+          .join("")}
+      `
+          : ""
+      }
     </footer>
   `;
 
   modal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
 
-  if (hasImages) {
-    initCarousel(win, data.images, data.title, { autoplay: true, interval: 3500 });
+  if (hasMedia) {
+    initCarousel(win, mediaItems, data.title, {
+      autoplay: true,
+      interval: 3500,
+    });
   }
 
   const focusables = getFocusable(win);
   (focusables[0] || win).focus({ preventScroll: true });
 }
 
-function initCarousel(root, images, title, opts = {}) {
+function initCarousel(root, mediaItems, title, opts = {}) {
   const {
     autoplay = true,
     interval = 3500,
@@ -174,7 +209,7 @@ function initCarousel(root, images, title, opts = {}) {
     pauseOnFocus = true,
   } = opts;
 
-  const imgEl = root.querySelector("[data-carousel-img]");
+  const frameEl = root.querySelector("[data-carousel-frame]");
   const prevBtn = root.querySelector("[data-carousel-prev]");
   const nextBtn = root.querySelector("[data-carousel-next]");
   const dots = [...root.querySelectorAll("[data-dot]")];
@@ -184,21 +219,42 @@ function initCarousel(root, images, title, opts = {}) {
   let timer = null;
 
   const prefersReducedMotion = () =>
-    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function show(newIdx) {
-    idx = (newIdx + images.length) % images.length;
-    imgEl.setAttribute("src", images[idx]);
-    imgEl.setAttribute("alt", `${title} screenshot ${idx + 1}`);
-    imgEl.dataset.index = String(idx);
-    // attach once (idempotent)
-    if (!imgEl._errBound) {
+    idx = (newIdx + mediaItems.length) % mediaItems.length;
+    const item = mediaItems[idx];
+
+    if (item.type === "video") {
+      frameEl.innerHTML = `
+      <video
+        class="pm-img"
+        src="${escapeAttr(item.src)}"
+        controls
+        muted
+        playsinline
+        preload="metadata"
+        aria-label="${escapeAttr(title)} demo video ${idx + 1}"
+      ></video>
+    `;
+    } else {
+      frameEl.innerHTML = `
+      <img
+        class="pm-img"
+        src="${escapeAttr(item.src)}"
+        alt="${escapeAttr(title)} screenshot ${idx + 1}"
+        loading="lazy"
+        data-index="${idx}"
+      />
+    `;
+
+      const imgEl = frameEl.querySelector("img");
       imgEl.addEventListener("error", () => {
         console.warn("Image failed to load:", imgEl.src);
         imgEl.alt = "Image failed to load";
       });
-      imgEl._errBound = true;
     }
+
     if (dots.length) {
       dots.forEach((d, i) => {
         d.classList.toggle("is-active", i === idx);
@@ -207,13 +263,22 @@ function initCarousel(root, images, title, opts = {}) {
     }
   }
 
-  function onPrev() { show(idx - 1); reset(); }
-  function onNext() { show(idx + 1); reset(); }
+  function onPrev() {
+    show(idx - 1);
+    reset();
+  }
+  function onNext() {
+    show(idx + 1);
+    reset();
+  }
 
   prevBtn?.addEventListener("click", onPrev);
   nextBtn?.addEventListener("click", onNext);
-  dots.forEach(d =>
-    d.addEventListener("click", () => { show(parseInt(d.dataset.dot, 10) || 0); reset(); })
+  dots.forEach((d) =>
+    d.addEventListener("click", () => {
+      show(parseInt(d.dataset.dot, 10) || 0);
+      reset();
+    }),
   );
 
   // (←/→) only when modal is open
@@ -222,10 +287,20 @@ function initCarousel(root, images, title, opts = {}) {
 
     // don't hijack typing
     const t = e.target;
-    if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+    if (
+      t &&
+      (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)
+    )
+      return;
 
-    if (e.key === "ArrowLeft" && images.length > 1) { e.preventDefault(); onPrev(); }
-    if (e.key === "ArrowRight" && images.length > 1) { e.preventDefault(); onNext(); }
+    if (e.key === "ArrowLeft" && mediaItems.length > 1) {
+      e.preventDefault();
+      onPrev();
+    }
+    if (e.key === "ArrowRight" && mediaItems.length > 1) {
+      e.preventDefault();
+      onNext();
+    }
   };
 
   document.addEventListener("keydown", onKey, { passive: false });
@@ -238,14 +313,20 @@ function initCarousel(root, images, title, opts = {}) {
 
   // === Autoplay bits ===
   function start() {
-    if (!autoplay || images.length < 2 || prefersReducedMotion()) return;
+    if (!autoplay || mediaItems.length < 2 || prefersReducedMotion()) return;
     stop();
     timer = setInterval(onNext, interval);
   }
   function stop() {
-    if (timer) { clearInterval(timer); timer = null; }
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
   }
-  function reset() { stop(); start(); }
+  function reset() {
+    stop();
+    start();
+  }
 
   if (pauseOnHover) {
     media.addEventListener("mouseenter", stop);
@@ -269,12 +350,16 @@ function initCarousel(root, images, title, opts = {}) {
   });
   obs.observe(modal, { attributes: true, attributeFilter: ["aria-hidden"] });
 
-  images.slice(1).forEach(src => { const i = new Image(); i.src = src; });
+  mediaItems.slice(1).forEach((item) => {
+    if (item.type === "image") {
+      const i = new Image();
+      i.src = item.src;
+    }
+  });
 
   show(0);
   start();
 }
-
 
 function closeModal() {
   if (!modal) return;
@@ -292,9 +377,11 @@ function closeModal() {
   }
 }
 
-
 document.addEventListener("click", (e) => {
-  if (e.target.closest("[data-project-close]") || e.target === modal.querySelector(".project-backdrop")) {
+  if (
+    e.target.closest("[data-project-close]") ||
+    e.target === modal.querySelector(".project-backdrop")
+  ) {
     e.preventDefault();
     closeModal();
     return;
@@ -320,7 +407,10 @@ document.addEventListener("keydown", (e) => {
 
   // Open when focused on a card
   const el = document.activeElement;
-  if ((e.key === "Enter" || e.key === " ") && el?.matches?.('.card[data-project]')) {
+  if (
+    (e.key === "Enter" || e.key === " ") &&
+    el?.matches?.(".card[data-project]")
+  ) {
     e.preventDefault();
     openModal(el.getAttribute("data-project"));
     return;
@@ -333,9 +423,11 @@ document.addEventListener("keydown", (e) => {
     const first = focusables[0];
     const last = focusables[focusables.length - 1];
     if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault(); last.focus();
+      e.preventDefault();
+      last.focus();
     } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault(); first.focus();
+      e.preventDefault();
+      first.focus();
     }
   }
 });

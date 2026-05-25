@@ -1,469 +1,646 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0ef" />
+    <meta name="description" content="Cyberpunk themed personal website" />
+    <title>INFO-DAEMON</title>
+    <link rel="preload" href="./styles/index.css" as="style" />
+    <link rel="stylesheet" href="./styles/index.css" />
+    <link rel="stylesheet" href="./styles/terminal.css" />
+    <link rel="stylesheet" href="./styles/effects.css" />
+    <link rel="stylesheet" href="./styles/ID.css" />
+    <link rel="stylesheet" href="./styles/header.css" />
+    <link rel="stylesheet" href="./styles/project.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#0ef" />
-  <meta name="description" content="Cyberpunk themed personal website" />
-  <title>INFO-DAEMON</title>
-  <link rel="preload" href="./styles/index.css" as="style" />
-  <link rel="stylesheet" href="./styles/index.css" />
-  <link rel="stylesheet" href="./styles/terminal.css" />
-  <link rel="stylesheet" href="./styles/effects.css" />
-  <link rel="stylesheet" href="./styles/ID.css" />
-  <link rel="stylesheet" href="./styles/header.css" />
-  <link rel="stylesheet" href="./styles/project.css" />
+  <body>
+    <!-- background layers -->
+    <canvas id="rain" aria-hidden="true"></canvas>
+    <div class="grid" aria-hidden="true"></div>
+    <div class="scanlines" aria-hidden="true"></div>
 
-</head>
+    <!-- custom cursor -->
+    <div class="cursor" aria-hidden="true"></div>
+    <div class="cursor-dot" aria-hidden="true"></div>
 
-<body>
-  <!-- background layers -->
-  <canvas id="rain" aria-hidden="true"></canvas>
-  <div class="grid" aria-hidden="true"></div>
-  <div class="scanlines" aria-hidden="true"></div>
+    <!-- header / nav -->
+    <header>
+      <div class="nav">
+        <a class="brand" href="#top" aria-label="Go to top">
+          <!-- Neon badge logo -->
+          <svg
+            width="34"
+            height="34"
+            viewBox="0 0 64 64"
+            role="img"
+            aria-label="logo"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient id="g" x1="0" x2="1">
+                <stop stop-color="#ff2bd6" offset="0" />
+                <stop stop-color="#00eaff" offset="1" />
+              </linearGradient>
+            </defs>
+            <rect
+              x="2"
+              y="2"
+              width="60"
+              height="60"
+              rx="12"
+              fill="none"
+              stroke="url(#g)"
+              stroke-width="3"
+            />
+            <path
+              d="M16 40 L32 16 L48 40"
+              fill="none"
+              stroke="#ffe359"
+              stroke-width="3"
+            />
+            <circle cx="32" cy="44" r="4" fill="#67ff85" />
+          </svg>
+          BEN•CARNES
+        </a>
 
-  <!-- custom cursor -->
-  <div class="cursor" aria-hidden="true"></div>
-  <div class="cursor-dot" aria-hidden="true"></div>
-
-  <!-- header / nav -->
-  <header>
-    <div class="nav">
-      <a class="brand" href="#top" aria-label="Go to top">
-        <!-- Neon badge logo -->
-        <svg width="34" height="34" viewBox="0 0 64 64" role="img" aria-label="logo" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="g" x1="0" x2="1">
-              <stop stop-color="#ff2bd6" offset="0" />
-              <stop stop-color="#00eaff" offset="1" />
-            </linearGradient>
-          </defs>
-          <rect x="2" y="2" width="60" height="60" rx="12" fill="none" stroke="url(#g)" stroke-width="3" />
-          <path d="M16 40 L32 16 L48 40" fill="none" stroke="#ffe359" stroke-width="3" />
-          <circle cx="32" cy="44" r="4" fill="#67ff85" />
-        </svg>
-        BEN•CARNES
-      </a>
-
-      <nav aria-label="Primary">
-        <a href="#">About</a>
-        <a href="#projects">Projects</a>
-        <a href="#skills">Skills</a>
-        <a href="#contact">Contact</a>
-        <a href="#" id="open-terminal" aria-haspopup="dialog" aria-controls="terminal-modal"
-          aria-label="Open retro terminal">Terminal</a>
-      </nav>
-    </div>
-  </header>
-
-  <div class="nav-island" aria-hidden="true"></div>
-  <!-- hero -->
-  <main id="top">
-    <section class="container hero" aria-label="Intro">
-      <div>
-        <span class="badge">// Human Interface 0x01</span>
-        <h1 class="glitch" data-text="Developer Online">Developer Online</h1>
-        <p class="lead">
-          Coding at unholy hours.
-        </p>
-        <!-- remember to change this!-->
-        <p class="top-desc">
-          Identity: Subject 2077 - Ben Carnes, Software Developer & Statistics Major at the University of Waterloo.
-        </p>
-        <p class="top-desc">
-          Role: Full-stack, AI/data, and systems-focused software developer.
-        </p>
-        <p class="top-desc">Report: As of now, Subject 2077's work spans from across the stack from user applications,
-          to full stack development and a touch of lower level systems.</p>
-        <div class="cta">
-          <a class="btn is-accented" href="#projects" aria-label="View Projects">View Projects</a>
-          <a class="btn is-accented" href="#contact" aria-label="Contact Me">Contact</a>
-          <a class="btn is-accented" href="./assets/ZONGYU_CARNES_V3.pdf" download
-            aria-label="Download Resume">Resume</a>
-        </div>
-        <div class="stat" role="listitem"><b>2</b> Software Internships</div>
-        <div class="stat" role="listitem"><b>2</b> Featured Projects</div>
-        <div class="stat" role="listitem"><b>3AM</b> Peak Debugging Hours</div>
+        <nav aria-label="Primary">
+          <a href="#">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#skills">Skills</a>
+          <a href="#contact">Contact</a>
+          <a
+            href="#"
+            id="open-terminal"
+            aria-haspopup="dialog"
+            aria-controls="terminal-modal"
+            aria-label="Open retro terminal"
+            >Terminal</a
+          >
+        </nav>
       </div>
+    </header>
 
-      <!-- ID Card-->
-      <div class="portrait holo-id" aria-label="Holographic ID for Ben Carnes">
-        <!-- frame + foil -->
-        <div class="holo-frame">
-          <div class="holo-foil"></div>
-          <div class="holo-noise"></div>
-          <div class="holo-scan"></div>
+    <div class="nav-island" aria-hidden="true"></div>
+    <!-- hero -->
+    <main id="top">
+      <section class="container hero" aria-label="Intro">
+        <div>
+          <span class="badge">// Human Interface 0x01</span>
+          <h1 class="glitch" data-text="Developer Online">Developer Online</h1>
+          <p class="lead">Coding at unholy hours.</p>
+          <!-- remember to change this!-->
+          <p class="top-desc">
+            Identity: Subject 2077 - Ben Carnes, Software Developer & Statistics
+            Major at the University of Waterloo.
+          </p>
+          <p class="top-desc">
+            Role: Full-stack, AI/data, and systems-focused software developer.
+          </p>
+          <p class="top-desc">
+            Report: As of now, Subject 2077's work spans from across the stack
+            from user applications, to full stack development and a touch of
+            lower level systems.
+          </p>
+          <div class="cta">
+            <a
+              class="btn is-accented"
+              href="#projects"
+              aria-label="View Projects"
+              >View Projects</a
+            >
+            <a class="btn is-accented" href="#contact" aria-label="Contact Me"
+              >Contact</a
+            >
+            <a
+              class="btn is-accented"
+              href="./assets/ZONGYU_CARNES_V3.pdf"
+              download
+              aria-label="Download Resume"
+              >Resume</a
+            >
+          </div>
+          <div class="stat" role="listitem"><b>2</b> Software Internships</div>
+          <div class="stat" role="listitem"><b>2</b> Featured Projects</div>
+          <div class="stat" role="listitem">
+            <b>3AM</b> Peak Debugging Hours
+          </div>
+        </div>
 
-          <!-- content -->
-          <div class="holo-content">
-            <div class="holo-chip" aria-hidden="true"></div>
+        <!-- ID Card-->
+        <div
+          class="portrait holo-id"
+          aria-label="Holographic ID for Ben Carnes"
+        >
+          <!-- frame + foil -->
+          <div class="holo-frame">
+            <div class="holo-foil"></div>
+            <div class="holo-noise"></div>
+            <div class="holo-scan"></div>
 
-            <div class="holo-top">
-              <span class="holo-label">IDENTITY: Subject 2077</span>
+            <!-- content -->
+            <div class="holo-content">
+              <div class="holo-chip" aria-hidden="true"></div>
 
-              <span class="holo-badge">PENDING</span>
-            </div>
+              <div class="holo-top">
+                <span class="holo-label">IDENTITY: Subject 2077</span>
 
-            <div class="holo-name">
-              <span class="holo-first">BEN</span>
-              <span class="holo-last">CARNES</span>
-            </div>
+                <span class="holo-badge">PENDING</span>
+              </div>
 
-            <div class="holo-meta">
-              <span class="meta-line">creative computing • systems & AI integration</span>
-              <span class="meta-line microtext" aria-hidden="true">BC • prototype • non-transferable</span>
-            </div>
+              <div class="holo-name">
+                <span class="holo-first">BEN</span>
+                <span class="holo-last">CARNES</span>
+              </div>
 
-            <!-- guilloché / pattern -->
-            <svg class="holo-guilloche" viewBox="0 0 300 150" aria-hidden="true" focusable="false">
-              <defs>
-                <linearGradient id="g1" x1="0" x2="1" y1="0" y2="0">
-                  <stop offset="0" stop-color="#0ff" stop-opacity="0.9" />
-                  <stop offset="1" stop-color="#f0f" stop-opacity="0.9" />
-                </linearGradient>
-              </defs>
-              <!-- layered sine-ish curves -->
-              <path d="M0,75 C40,20 80,130 120,75 160,20 200,130 240,75 270,45 300,75 300,75" fill="none"
-                stroke="url(#g1)" stroke-width="1" opacity="0.6" />
-              <path d="M0,75 C40,130 80,20 120,75 160,130 200,20 240,75 270,105 300,75 300,75" fill="none"
-                stroke="url(#g1)" stroke-width="1" opacity="0.35" />
-            </svg>
+              <div class="holo-meta">
+                <span class="meta-line"
+                  >creative computing • systems & AI integration</span
+                >
+                <span class="meta-line microtext" aria-hidden="true"
+                  >BC • prototype • non-transferable</span
+                >
+              </div>
 
-            <!-- tiny QR-ish glyph -->
-            <div class="holo-qr" aria-hidden="true">
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
+              <!-- guilloché / pattern -->
+              <svg
+                class="holo-guilloche"
+                viewBox="0 0 300 150"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <defs>
+                  <linearGradient id="g1" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0" stop-color="#0ff" stop-opacity="0.9" />
+                    <stop offset="1" stop-color="#f0f" stop-opacity="0.9" />
+                  </linearGradient>
+                </defs>
+                <!-- layered sine-ish curves -->
+                <path
+                  d="M0,75 C40,20 80,130 120,75 160,20 200,130 240,75 270,45 300,75 300,75"
+                  fill="none"
+                  stroke="url(#g1)"
+                  stroke-width="1"
+                  opacity="0.6"
+                />
+                <path
+                  d="M0,75 C40,130 80,20 120,75 160,130 200,20 240,75 270,105 300,75 300,75"
+                  fill="none"
+                  stroke="url(#g1)"
+                  stroke-width="1"
+                  opacity="0.35"
+                />
+              </svg>
+
+              <!-- tiny QR-ish glyph -->
+              <div class="holo-qr" aria-hidden="true">
+                <span></span><span></span><span></span><span></span
+                ><span></span> <span></span><span></span><span></span
+                ><span></span><span></span> <span></span><span></span
+                ><span></span><span></span><span></span> <span></span
+                ><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span
+                ><span></span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-    <!-- about -->
-    <section id="about">
-    <div class="container">
-        <h2 class="section-title">/ Work History</h2>
-        <div class="timeline">
-        <div class="timeline-item">
-            <div class="year">2026</div>
-            <div>
-            <h3>Software Developer Intern @ Statistics Canada</h3>
-            <p class="meta">
-                Built reusable data-transformation modules, developed custom Blockly blocks,
-                refactored SAS workflows to Python, and created an OWASP ZAP CI/CD security scanning reference pipeline.
-            </p>
+      <!-- about -->
+      <section id="about">
+        <div class="container">
+          <h2 class="section-title">/ Work History</h2>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="year">2026</div>
+              <div>
+                <h3>Software Developer Intern @ Statistics Canada</h3>
+                <p class="meta">
+                  Built reusable data-transformation modules, developed custom
+                  Blockly blocks, refactored SAS workflows to Python, and
+                  created an OWASP ZAP CI/CD security scanning reference
+                  pipeline.
+                </p>
+              </div>
             </div>
-        </div>
 
-        <div class="timeline-item">
-            <div class="year">2025</div>
-            <div>
-            <h3>Full Stack Software Developer Intern @ LC Institute</h3>
-            <p class="meta">
-                Designed and deployed an Azure-hosted RAG chatbot using Azure OpenAI, Qdrant,
-                Docker, Azure Container Apps, Entra ID authentication, and a WordPress frontend.
-            </p>
+            <div class="timeline-item">
+              <div class="year">2025</div>
+              <div>
+                <h3>Full Stack Software Developer Intern @ LC Institute</h3>
+                <p class="meta">
+                  Designed and deployed an Azure-hosted RAG chatbot using Azure
+                  OpenAI, Qdrant, Docker, Azure Container Apps, Entra ID
+                  authentication, and a WordPress frontend.
+                </p>
+              </div>
             </div>
-        </div>
 
-        <div class="timeline-item">
-            <div class="year">2023</div>
-            <div>
-            <h3>Team Member @ WeAccelerate</h3>
-            <p class="meta">
-                Prototyped a chatbot designed to give users health advice and potential triage guidance.
-            </p>
+            <div class="timeline-item">
+              <div class="year">2023</div>
+              <div>
+                <h3>Team Member @ WeAccelerate</h3>
+                <p class="meta">
+                  Prototyped a chatbot designed to give users health advice and
+                  potential triage guidance.
+                </p>
+              </div>
             </div>
+          </div>
         </div>
-        </div>
-    </div>
-    </section>
+      </section>
 
+      <!-- projects -->
+      <section id="projects">
+        <div class="container">
+          <h2 class="section-title">/ Projects</h2>
 
-    <!-- projects -->
-    <section id="projects">
-    <div class="container">
-        <h2 class="section-title">/ Projects</h2>
-
-        <div class="grid-cards" role="list">
-        <article
-            class="card"
-            role="button"
-            tabindex="0"
-            aria-haspopup="dialog"
-            aria-controls="project-modal"
-            data-project="gamegrab"
-        >
-            <span class="tag">PySide6 / PyTorch / C++ DLL</span>
-            <h3>Gamegrab</h3>
-            <p class="meta">
-            Desktop OCR and translation tool for PC games, built for capturing Japanese dialogue,
-            menus, and on-screen UI across different resolutions.
-            </p>
-            <div class="actions">
-            <a
-                href="https://github.com/spartan3661/Gamegrab"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="icon"
-                title="Go to Gamegrab on GitHub"
-                aria-label="Go to Gamegrab on GitHub"
+          <div class="grid-cards" role="list">
+            <article
+              class="card"
+              role="button"
+              tabindex="0"
+              aria-haspopup="dialog"
+              aria-controls="project-modal"
+              data-project="gamegrab"
             >
-                <img
-                src="./icons/github.svg"
-                alt=""
-                width="32"
-                height="32"
-                style="vertical-align:middle;"
-                />
-            </a>
-            </div>
-        </article>
+              <span class="tag">PySide6 / PyTorch / C++ DLL</span>
+              <h3>Gamegrab</h3>
+              <p class="meta">
+                Desktop OCR and translation tool for PC games, built for
+                capturing Japanese dialogue, menus, and on-screen UI across
+                different resolutions.
+              </p>
+              <div class="actions">
+                <a
+                  href="https://github.com/spartan3661/Gamegrab"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="icon"
+                  title="Go to Gamegrab on GitHub"
+                  aria-label="Go to Gamegrab on GitHub"
+                >
+                  <img
+                    src="icons/github.svg"
+                    alt=""
+                    width="32"
+                    height="32"
+                    style="vertical-align: middle"
+                  />
+                </a>
+              </div>
+            </article>
 
-        <article
-            class="card"
-            role="button"
-            tabindex="0"
-            aria-haspopup="dialog"
-            aria-controls="project-modal"
-            data-project="wgcapture"
-        >
-            <span class="tag">C++ / Direct3D / Python / PyPI</span>
-            <h3>WGCapture</h3>
-            <p class="meta">
-            Lightweight Python screen-capture library published on PyPI, powered by a custom
-            C++/DLL backend using Direct3D frame-pool capture.
-            </p>
-            <div class="actions">
-            <a
-                href="https://github.com/spartan3661/WGCapture"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="icon"
-                title="Go to WGCapture on GitHub"
-                aria-label="Go to WGCapture on GitHub"
+            <article
+              class="card"
+              role="button"
+              tabindex="0"
+              aria-haspopup="dialog"
+              aria-controls="project-modal"
+              data-project="wgcapture"
             >
-                <img
-                src="./icons/github.svg"
-                alt=""
-                width="32"
-                height="32"
-                style="vertical-align:middle;"
-                />
-            </a>
-            </div>
-        </article>
+              <span class="tag">C++ / Direct3D / Python / PyPI</span>
+              <h3>WGCapture</h3>
+              <p class="meta">
+                Lightweight Python screen-capture library published on PyPI,
+                powered by a custom C++/DLL backend using Direct3D frame-pool
+                capture.
+              </p>
+              <div class="actions">
+                <a
+                  href="https://github.com/spartan3661/WGCapture"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="icon"
+                  title="Go to WGCapture on GitHub"
+                  aria-label="Go to WGCapture on GitHub"
+                >
+                  <img
+                    src="icons/github.svg"
+                    alt=""
+                    width="32"
+                    height="32"
+                    style="vertical-align: middle"
+                  />
+                </a>
+              </div>
+            </article>
 
-        <article
-            class="card"
-            role="button"
-            tabindex="0"
-            aria-haspopup="dialog"
-            aria-controls="project-modal"
-            data-project="cck3"
-        >
-            <span class="tag">C++ / Console App</span>
-            <h3>Chamber Crawler 3000+</h3>
-            <p class="meta">
-            Console-driven roguelike dungeon crawler focused on turn-based gameplay,
-            procedural encounters, and classic terminal-style interaction.
-            </p>
-            <div class="actions">
-            <a
-                href="https://github.com/spartan3661/cck3"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="icon"
-                title="Go to Chamber Crawler 3000+ on GitHub"
-                aria-label="Go to Chamber Crawler 3000+ on GitHub"
+            <article
+              class="card"
+              role="button"
+              tabindex="0"
+              aria-haspopup="dialog"
+              aria-controls="project-modal"
+              data-project="watonomous"
             >
-                <img
-                src="./icons/github.svg"
-                alt=""
-                width="32"
-                height="32"
-                style="vertical-align:middle;"
-                />
-            </a>
-            </div>
-        </article>
+              <span class="tag">C++ / Python / Docker / CMake</span>
+              <h3>WATonomous Simulation</h3>
+              <p class="meta">
+                Autonomous-driving simulation project using a Dockerized
+                robotics workflow, modular source code, and Linux-based
+                development tooling.
+              </p>
+              <div class="actions">
+                <a
+                  href="https://github.com/spartan3661/watonomous-sim"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="icon"
+                  title="Go to WATonomous Simulation on GitHub"
+                  aria-label="Go to WATonomous Simulation on GitHub"
+                >
+                  <img
+                    src="icons/github.svg"
+                    alt=""
+                    width="32"
+                    height="32"
+                    style="vertical-align: middle"
+                  />
+                </a>
+              </div>
+            </article>
+          </div>
         </div>
-    </div>
-    </section>
-    
-    <!-- skills -->
-    <section id="skills">
-    <div class="container">
-        <h2 class="section-title">/ Technical Loadout</h2>
+      </section>
 
-        <div class="skills">
-        <article class="card skill-card">
-            <div class="skill-card-top">
-            <span class="skill-kicker">core syntax</span>
-            <h3>Languages</h3>
-            </div>
-            <p class="meta">Primary tools for building applications, automation, and systems-level work.</p>
-            <div class="skill-tags" aria-label="Programming languages">
-            <span>Python</span>
-            <span>C++</span>
-            <span>JavaScript</span>
-            <span>HTML/CSS</span>
-            <span>SAS</span>
-            <span>PHP</span>
-            </div>
-        </article>
+      <!-- skills -->
+      <section id="skills">
+        <div class="container">
+          <h2 class="section-title">/ Technical Loadout</h2>
 
-        <article class="card skill-card">
-            <div class="skill-card-top">
-            <span class="skill-kicker">ai/data stack</span>
-            <h3>AI & Data</h3>
-            </div>
-            <p class="meta">Retrieval, model orchestration, vector search, and applied ML workflows.</p>
-            <div class="skill-tags" aria-label="AI and data tools">
-            <span>PyTorch</span>
-            <span>LangChain</span>
-            <span>RAG</span>
-            <span>Azure OpenAI</span>
-            <span>Qdrant</span>
-            </div>
-        </article>
+          <div class="skills">
+            <article class="card skill-card">
+              <div class="skill-card-top">
+                <span class="skill-kicker">core syntax</span>
+                <h3>Languages</h3>
+              </div>
+              <p class="meta">
+                Primary tools for building applications, automation, and
+                systems-level work.
+              </p>
+              <div class="skill-tags" aria-label="Programming languages">
+                <span>Python</span>
+                <span>C++</span>
+                <span>JavaScript</span>
+                <span>HTML/CSS</span>
+                <span>SAS</span>
+                <span>PHP</span>
+              </div>
+            </article>
 
-        <article class="card skill-card">
-            <div class="skill-card-top">
-            <span class="skill-kicker">build surface</span>
-            <h3>Web & Tools</h3>
-            </div>
-            <p class="meta">Interfaces, developer tooling, scripting, containers, and implementation environments.</p>
-            <div class="skill-tags" aria-label="Web frameworks and development tools">
-            <span>React</span>
-            <span>PySide6</span>
-            <span>Blockly</span>
-            <span>WordPress</span>
-            <span>Git</span>
-            <span>Bash</span>
-            <span>Linux</span>
-            <span>Docker</span>
-            <span>Jupyter</span>
-            </div>
-        </article>
+            <article class="card skill-card">
+              <div class="skill-card-top">
+                <span class="skill-kicker">ai/data stack</span>
+                <h3>AI & Data</h3>
+              </div>
+              <p class="meta">
+                Retrieval, model orchestration, vector search, and applied ML
+                workflows.
+              </p>
+              <div class="skill-tags" aria-label="AI and data tools">
+                <span>PyTorch</span>
+                <span>LangChain</span>
+                <span>RAG</span>
+                <span>Azure OpenAI</span>
+                <span>Qdrant</span>
+              </div>
+            </article>
 
-        <article class="card skill-card">
-            <div class="skill-card-top">
-            <span class="skill-kicker">deployment layer</span>
-            <h3>Cloud, Security & Systems</h3>
-            </div>
-            <p class="meta">Cloud deployment, authentication, CI/CD security checks, and Windows capture internals.</p>
-            <div class="skill-tags" aria-label="Cloud security and systems skills">
-            <span>Azure</span>
-            <span>Azure Container Apps</span>
-            <span>Entra ID</span>
-            <span>CI/CD</span>
-            <span>OWASP ZAP</span>
-            <span>Direct3D</span>
-            <span>Windows API</span>
-            <span>DLLs</span>
-            <span>PyPI</span>
-            </div>
-        </article>
+            <article class="card skill-card">
+              <div class="skill-card-top">
+                <span class="skill-kicker">build surface</span>
+                <h3>Web & Tools</h3>
+              </div>
+              <p class="meta">
+                Interfaces, developer tooling, scripting, containers, and
+                implementation environments.
+              </p>
+              <div
+                class="skill-tags"
+                aria-label="Web frameworks and development tools"
+              >
+                <span>React</span>
+                <span>PySide6</span>
+                <span>Blockly</span>
+                <span>WordPress</span>
+                <span>Git</span>
+                <span>Bash</span>
+                <span>Linux</span>
+                <span>Docker</span>
+                <span>Jupyter</span>
+              </div>
+            </article>
+
+            <article class="card skill-card">
+              <div class="skill-card-top">
+                <span class="skill-kicker">deployment layer</span>
+                <h3>Cloud, Security & Systems</h3>
+              </div>
+              <p class="meta">
+                Cloud deployment, authentication, CI/CD security checks, and
+                Windows capture internals.
+              </p>
+              <div
+                class="skill-tags"
+                aria-label="Cloud security and systems skills"
+              >
+                <span>Azure</span>
+                <span>Azure Container Apps</span>
+                <span>Entra ID</span>
+                <span>CI/CD</span>
+                <span>OWASP ZAP</span>
+                <span>Direct3D</span>
+                <span>Windows API</span>
+                <span>DLLs</span>
+                <span>PyPI</span>
+              </div>
+            </article>
+          </div>
         </div>
-    </div>
-    </section>
-
+      </section>
 
       <!-- contact -->
       <section id="contact">
         <div class="container">
           <h2 class="section-title">/ Contact</h2>
-          <form id="contact-form" action="https://formspree.io/f/mldwvkao" method="POST">
-            <label><input name="name" required placeholder="Your Name" autocomplete="name" /></label>
-            <label><input name="email" type="email" required placeholder="Your email..." autocomplete="email" /></label>
-            <label><textarea name="message" required placeholder="Transmit a message…"></textarea></label>
-            <button class="btn is-accented" type="submit">Send Transmission</button>
-            <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+          <form
+            id="contact-form"
+            action="https://formspree.io/f/mldwvkao"
+            method="POST"
+          >
+            <label
+              ><input
+                name="name"
+                required
+                placeholder="Your Name"
+                autocomplete="name"
+            /></label>
+            <label
+              ><input
+                name="email"
+                type="email"
+                required
+                placeholder="Your email..."
+                autocomplete="email"
+            /></label>
+            <label>
+              <textarea
+                name="message"
+                required
+                placeholder="Transmit a message…"
+              ></textarea>
+            </label>
+            <button class="btn is-accented" type="submit">
+              Send Transmission
+            </button>
+            <div
+              style="
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                flex-wrap: wrap;
+              "
+            >
               <span class="small">Psst! I am not evil :) </span>
             </div>
           </form>
         </div>
       </section>
-  </main>
+    </main>
 
-  <!-- footer / console -->
-  <footer>
-    <div class="console" aria-live="polite" aria-atomic="true">
-      <div class="console-line">
-        <span>
-          <b>info-daemon@unknown</b>:~$
-          <span id="console-log">ready</span><span class="blink">▮</span>
-        </span>
+    <!-- footer / console -->
+    <footer>
+      <div class="console" aria-live="polite" aria-atomic="true">
+        <div class="console-line">
+          <span>
+            <b>info-daemon@unknown</b>:~$ <span id="console-log">ready</span
+            ><span class="blink">▮</span>
+          </span>
 
-        <!-- inline textbox with a placeholder (grey when empty) -->
-        <label for="footer-bash" class="sr-only"></label>
-        <input id="footer-bash" type="text" placeholder='type "bash" and press Enter'
-          aria-label='Type "bash" and press Enter to open the terminal' />
+          <!-- inline textbox with a placeholder (grey when empty) -->
+          <label for="footer-bash" class="sr-only"></label>
+          <input
+            id="footer-bash"
+            type="text"
+            placeholder='type "bash" and press Enter'
+            aria-label='Type "bash" and press Enter to open the terminal'
+          />
 
-        <small class="hint">press <kbd>~</kbd> to open anywhere</small>
+          <small class="hint">press <kbd>~</kbd> to open anywhere</small>
+        </div>
+      </div>
+
+      <div class="site-controls">
+        <label class="chip" title="Toggle matrix rain">
+          <input type="checkbox" id="toggle-rain" checked />
+          <span class="switch" aria-hidden="true"></span>
+          <span class="label">Rain</span>
+        </label>
+
+        <label class="chip" title="Cycle accent color">
+          <input type="checkbox" id="cycle-accent" checked />
+          <span class="switch" aria-hidden="true"></span>
+          <span class="label">Pulse</span>
+        </label>
+      </div>
+    </footer>
+
+    <!-- Toast -->
+    <div
+      id="toast"
+      class="visually-hidden"
+      role="status"
+      aria-live="polite"
+    ></div>
+
+    <!-- modal markup -->
+    <div
+      class="term-modal"
+      id="terminal-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="terminal-title"
+      aria-hidden="true"
+    >
+      <div class="term-backdrop" data-term-close></div>
+      <div class="term-window" role="document">
+        <header class="term-chrome">
+          <div class="term-dots">
+            <button
+              class="dot dot--close"
+              title="Close (Esc)"
+              aria-label="Close terminal"
+              data-term-close
+            ></button>
+            <button
+              class="dot dot--min"
+              title="Minimize"
+              aria-label="Minimize"
+              data-term-close
+            ></button>
+            <button
+              class="dot dot--max"
+              title="Maximize"
+              aria-label="Maximize"
+            ></button>
+          </div>
+          <h2 id="terminal-title">/bin/bash — Retro Terminal</h2>
+        </header>
+
+        <section
+          class="term-screen"
+          id="term-screen"
+          aria-live="polite"
+          aria-atomic="false"
+        >
+          <!-- Output goes here -->
+          <div class="term-line boot">[sys] loading shell…</div>
+          <div class="term-line boot">
+            [sys] motd: type <span class="hl">help</span> to begin
+          </div>
+        </section>
+
+        <form class="term-inputbar" id="term-form" autocomplete="on">
+          <label for="term-input" class="sr-only">Command</label>
+          <div class="prompt" aria-hidden="true">
+            <span id="term-user">guest</span>@<span id="term-host"
+              >cyberyou</span
+            >:<span class="cwd">~</span>$
+          </div>
+          <input
+            id="term-input"
+            name="cmd"
+            type="text"
+            inputmode="text"
+            spellcheck="false"
+            autofocus
+          />
+        </form>
       </div>
     </div>
 
-    <div class="site-controls">
-      <label class="chip" title="Toggle matrix rain">
-        <input type="checkbox" id="toggle-rain" checked />
-        <span class="switch" aria-hidden="true"></span>
-        <span class="label">Rain</span>
-      </label>
-
-      <label class="chip" title="Cycle accent color">
-        <input type="checkbox" id="cycle-accent" checked />
-        <span class="switch" aria-hidden="true"></span>
-        <span class="label">Pulse</span>
-      </label>
-    </div>
-  </footer>
-
-
-  <!-- Toast -->
-  <div id="toast" class="visually-hidden" role="status" aria-live="polite"></div>
-
-  <!-- modal markup -->
-  <div class="term-modal" id="terminal-modal" role="dialog" aria-modal="true" aria-labelledby="terminal-title"
-    aria-hidden="true">
-    <div class="term-backdrop" data-term-close></div>
-    <div class="term-window" role="document">
-      <header class="term-chrome">
-        <div class="term-dots">
-          <button class="dot dot--close" title="Close (Esc)" aria-label="Close terminal" data-term-close></button>
-          <button class="dot dot--min" title="Minimize" aria-label="Minimize" data-term-close></button>
-          <button class="dot dot--max" title="Maximize" aria-label="Maximize"></button>
-        </div>
-        <h2 id="terminal-title">/bin/bash — Retro Terminal</h2>
-      </header>
-
-      <section class="term-screen" id="term-screen" aria-live="polite" aria-atomic="false">
-        <!-- Output goes here -->
-        <div class="term-line boot">[sys] loading shell…</div>
-        <div class="term-line boot">[sys] motd: type <span class="hl">help</span> to begin</div>
-      </section>
-
-      <form class="term-inputbar" id="term-form" autocomplete="on">
-        <label for="term-input" class="sr-only">Command</label>
-        <div class="prompt" aria-hidden="true"><span id="term-user">guest</span>@<span
-            id="term-host">cyberyou</span>:<span class="cwd">~</span>$</div>
-        <input id="term-input" name="cmd" type="text" inputmode="text" spellcheck="false" autofocus />
-      </form>
-    </div>
-  </div>
-
-
-  <!-- CRT warp filter defs (hidden) -->
-  <svg width="0" height="0" class="sr-only" aria-hidden="true" focusable="false">
-    <defs>
-      <!-- Radial-based displacement map to fake a fisheye CRT curve -->
-      <filter id="crtWarp" x="-20%" y="-20%" width="140%" height="140%">
-        <!-- Radial brightness map (brighter center) -->
-        <feImage preserveAspectRatio="none" x="0" y="0" width="100%" height="100%" xlink:href="data:image/svg+xml;utf8,
+    <!-- CRT warp filter defs (hidden) -->
+    <svg
+      width="0"
+      height="0"
+      class="sr-only"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <defs>
+        <!-- Radial-based displacement map to fake a fisheye CRT curve -->
+        <filter id="crtWarp" x="-20%" y="-20%" width="140%" height="140%">
+          <!-- Radial brightness map (brighter center) -->
+          <feImage
+            preserveAspectRatio="none"
+            x="0"
+            y="0"
+            width="100%"
+            height="100%"
+            xlink:href="data:image/svg+xml;utf8,
             <svg xmlns='http://www.w3.org/2000/svg' width='1000' height='1000'>
               <defs>
                 <radialGradient id='g' cx='50%%' cy='50%%' r='70%%'>
@@ -473,27 +650,40 @@
                 </radialGradient>
               </defs>
               <rect width='100%%' height='100%%' fill='url(%23g)'/>
-            </svg>" result="map" />
-        <feGaussianBlur in="map" stdDeviation="20" result="blur" />
-        <!-- Displace the source using the blurred map (R & G channels) -->
-        <feDisplacementMap in="SourceGraphic" in2="blur" scale="35" xChannelSelector="R" yChannelSelector="G" />
-      </filter>
-    </defs>
-  </svg>
+            </svg>"
+            result="map"
+          />
+          <feGaussianBlur in="map" stdDeviation="20" result="blur" />
+          <!-- Displace the source using the blurred map (R & G channels) -->
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="blur"
+            scale="35"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
 
-  <!-- Project Modal Root -->
-  <div class="project-modal" id="project-modal" role="dialog" aria-modal="true" aria-labelledby="project-modal-title"
-    aria-hidden="true">
-    <div class="project-backdrop" data-project-close></div>
-    <div class="project-window" role="document">
-      <!-- content injected by project.js -->
+    <!-- Project Modal Root -->
+    <div
+      class="project-modal"
+      id="project-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="project-modal-title"
+      aria-hidden="true"
+    >
+      <div class="project-backdrop" data-project-close></div>
+      <div class="project-window" role="document">
+        <!-- content injected by project.js -->
+      </div>
+      <link rel="preload" href="icons/github.svg" as="image" />
     </div>
-    <link rel="preload" href="./icons/github.svg" as="image" />
-  </div>
-  <script type="module" src="./scripts/project.js"></script>
-  <script type="module" src="./scripts/index.js"></script>
-  <script type="module" src="./scripts/terminal.js" defer></script>
-  <script type="module" src="./scripts/header.js" defer></script>
-</body>
-
+    <script type="module" src="./scripts/project.js"></script>
+    <script type="module" src="./scripts/index.js"></script>
+    <script type="module" src="./scripts/terminal.js" defer></script>
+    <script type="module" src="./scripts/header.js" defer></script>
+  </body>
 </html>

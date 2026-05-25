@@ -388,10 +388,25 @@
 .pm-nav {
   border: none;
   background: transparent;
-  font-size: 2rem;
+  color: var(--pm-accent);
+  font-size: 3rem;
+  font-weight: 800;
   line-height: 1;
   padding: .25rem .5rem;
   cursor: pointer;
+  text-shadow:
+    0 0 6px var(--pm-accent),
+    0 0 14px rgba(0, 234, 255, .8),
+    0 0 24px rgba(255, 43, 214, .45);
+}
+
+.pm-nav:hover {
+  color: #fff;
+  transform: scale(1.08);
+  text-shadow:
+    0 0 8px var(--pm-accent),
+    0 0 18px rgba(0, 234, 255, 1),
+    0 0 28px rgba(255, 43, 214, .65);
 }
 
 .pm-nav:focus {
